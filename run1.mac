@@ -1,0 +1,9 @@
+/run/initialize
+
+/gun/particle neutron
+/gun/energy 0.005 eV
+
+/gun/direction 0 0 1
+
+/run/printProgress 1000
+/run/beamOn 10000
