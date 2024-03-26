@@ -75,10 +75,21 @@ void B4cDetectorConstruction::DefineMaterials()
     //G4Element* elN = nistManager->FindOrBuildElement("N");
     //G4Element* elH = nistManager->FindOrBuildElement("H");
     G4String name, symbol;
-    G4Element* elN = new G4Element(name="Nitrogen",symbol="N" , z= 7., 14.007*g/mole);
-    G4Element* elO = new G4Element(name="Oxygen" ,symbol="O" , z= 8., 15.999*g/mole);
-    G4Element* elAr = new G4Element(name="Argon" ,symbol="Ar" , z= 18., 39.948*g/mole);
-    G4Element* elH = new G4Element(name="Hydrogen" ,symbol="H" , z= 1., 1.008*g/mole);
+    G4Isotope* isoN14 = new G4Isotope("Nitrogen-14", 7, 14, 14.007*g/mole);
+    G4Element* elN = new G4Element("Nitrogen", "N", 1);
+    elN->AddIsotope(isoN14, 1.0);
+
+    G4Isotope* isoO16 = new G4Isotope("Oxygen-16", 8, 16, 15.999*g/mole);
+    G4Element* elO = new G4Element("Oxygen", "O", 1);
+    elO->AddIsotope(isoO16, 1.0);
+
+    G4Isotope* isoAr40 = new G4Isotope("Argon-40", 18, 40, 39.948*g/mole);
+    G4Element* elAr = new G4Element("Argon", "Ar", 1);
+    elAr->AddIsotope(isoAr40, 1.0);
+
+    G4Isotope* isoH1 = new G4Isotope("Hydrogen-1", 1, 1, 1.008*g/mole);
+    G4Element* elH = new G4Element("Hydrogen", "H", 1);
+    elH->AddIsotope(isoH1, 1.0);
 
     // Dry Air defined by me, using fraction of mass
     G4double fractionOfMass; //G4 wants material composition by number of elements or mass fraction
@@ -152,7 +163,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-    auto air = G4Material::GetMaterial("AirDry_NC");
+    auto air = G4Material::GetMaterial("AirDry_G4");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {

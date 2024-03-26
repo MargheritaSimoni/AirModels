@@ -37,6 +37,7 @@ class B4cCalorHit : public G4VHit
     // methods to handle data
     void Add(G4double de, G4double dl);
     void AddNeutron(G4double neutronE);
+    void AddAr41(G4double Ar41E);
     void AddPosition(G4double posx, G4double posy);
 
     // get methods
@@ -44,6 +45,8 @@ class B4cCalorHit : public G4VHit
     G4double GetTrackLength() const;
     G4int GetNNeutrons() const;
     G4double GetENeutrons() const;
+    G4int GetNAr41() const;
+    G4double GetEAr41() const;
     G4double GetXpos() const;
     G4double GetYpos() const;
 
@@ -53,6 +56,8 @@ private:
     G4double fTrackLength; ///< Track length in the  sensitive volume
     G4double fNeutrons;
     G4double eNeutron;
+    G4double fAr41;
+    G4double eAr41;
     G4double xPos;
     G4double yPos;
 };
@@ -102,6 +107,14 @@ inline G4int B4cCalorHit::GetNNeutrons() const {
 
 inline G4double B4cCalorHit::GetENeutrons() const {
   return eNeutron;
+}
+
+inline G4int B4cCalorHit::GetNAr41() const { //proveArgon
+  return int(fAr41);
+}
+
+inline G4double B4cCalorHit::GetEAr41() const { //proveArgon
+    return eAr41;
 }
 
 inline G4double B4cCalorHit::GetXpos() const {

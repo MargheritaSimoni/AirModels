@@ -101,26 +101,34 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
 
         //G4cout<<pid<<" - pre: "<<step->GetPreStepPoint()->GetPhysicalVolume()->GetName()<< " - post: "<<step->GetPostStepPoint()->GetPhysicalVolume()->GetName()<< "- photon Cross: "<< neutronCross<< " Neutron Energy: "<<neutronE<<G4endl;
         // questo termina la traccia in modo da risparmiare tempo nella simulazione
-        Kill(step);
+        //Kill(step); //serve??
     }
-/*
-    if (pid == "Ar41") { //proveArgon tutto il blocco
+///////////////////////////////////////
 
-        // prende l'energia cinetica del fotone e chiama la funzione AddPhoton() che è definita nel CalorHit.cc, è semplicemente un contatore che aggiunge +1 al numero di fotoni totali
-        G4double neutronE = step->GetPostStepPoint()->GetKineticEnergy();
-        G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
-        hit->AddNeutron(neutronE);
-        hit->AddPosition(pos.x(), pos.y());
-        hitTotal->AddNeutron(neutronE);
-        hitTotal->AddPosition(pos.x(), pos.y());
-        //G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
-        //hitTotal->AddPosition(pos.x, pos.y);
+    // Get the secondary particles generated in this step
+    const std::vector<const G4Track*>* secondary = step->GetSecondaryInCurrentStep();
 
-        //G4cout<<pid<<" - pre: "<<step->GetPreStepPoint()->GetPhysicalVolume()->GetName()<< " - post: "<<step->GetPostStepPoint()->GetPhysicalVolume()->GetName()<< "- photon Cross: "<< neutronCross<< " Neutron Energy: "<<neutronE<<G4endl;
-        // questo termina la traccia in modo da risparmiare tempo nella simulazione
-        Kill(step);
+    // Loop through the secondary particles
+    for (size_t i = 0; i < secondary->size(); ++i) {
+        // Get the particle ID of each secondary particle
+        auto secondaryName = (*secondary)[i]->GetDefinition()->GetParticleName();
+        auto secondaryEnergy = (*secondary)[i]->GetKineticEnergy();
+        // Now you can use secondaryPid or secondaryName as needed
+        G4cout << "Secondary Particle: " << secondaryName << G4endl;
+        G4cout << "Energy of Secondary Particle: " << secondaryEnergy << G4endl;
+
+        if (secondaryName == "Ar41") { //proveArgon
+            hit->AddAr41(secondaryEnergy);
+            hitTotal->AddAr41(secondaryEnergy);
+
+            //Kill(step);
+        }
+
+        // Example: Print secondary particle information
     }
-*/
+    ///////////////////////
+
+
     return true;
 }
 

@@ -28,7 +28,7 @@ It is possible to use a physics list manually defined, (in the case of "physicsL
 **nb.:** NCrystal installation needs to be done after initialization of runManager, so the latter can not be done inside the macro file
 
 ##Primary generator
-In this version neutrons are generated with a constant distribution, using G4UniformRand(), the beam has a squared section of 2x2 mm.
+In this version neutrons are generated with a constant distribution, using G4UniformRand(), the beam has a squared section of 5x5 mm.
 
 **nb.:** G4UniformRand does not vary its seed automatically
 

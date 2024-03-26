@@ -54,7 +54,7 @@ void B4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     // Set gun position
     fParticleGun
-            ->SetParticlePosition(G4ThreeVector(px * mm, py * mm, pos_z));
+            ->SetParticlePosition(G4ThreeVector(px, py, pos_z));
 
     //G4double energy = G4RandGauss(2.5e-3, 1e-4);
     //fParticleGun->SetParticleEnergy(energy * eV);

@@ -19,8 +19,10 @@ B4cCalorHit::B4cCalorHit()
    fTrackLength(0.),
    fNeutrons(0),
    eNeutron(-999),
-   xPos(-999),
-   yPos(-999)
+   fAr41(0),
+   eAr41(-999),
+   xPos(-888),
+   yPos(-888)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -32,10 +34,12 @@ B4cCalorHit::~B4cCalorHit() {}
 B4cCalorHit::B4cCalorHit(const B4cCalorHit& right)
   : G4VHit()
 {
-  fEdep        = right.fEdep;
+  fEdep = right.fEdep;
   fTrackLength = right.fTrackLength;
     fNeutrons = right.fNeutrons;
     eNeutron = right.eNeutron;
+    fAr41 = right.fAr41;
+    eAr41 = right.eAr41;
     xPos = right.xPos;
     yPos = right.yPos;
 }
@@ -44,10 +48,12 @@ B4cCalorHit::B4cCalorHit(const B4cCalorHit& right)
 
 const B4cCalorHit& B4cCalorHit::operator=(const B4cCalorHit& right)
 {
-  fEdep        = right.fEdep;
-  fTrackLength = right.fTrackLength;
+    fEdep = right.fEdep;
+    fTrackLength = right.fTrackLength;
     fNeutrons = right.fNeutrons;
     eNeutron = right.eNeutron;
+    fAr41 = right.fAr41;
+    eAr41 = right.eAr41;
     xPos = right.xPos;
     yPos = right.yPos;
 
@@ -79,6 +85,11 @@ void B4cCalorHit::AddNeutron(G4double neutronE) {
         fNeutrons += 1;
         eNeutron = neutronE;
    };
+
+void B4cCalorHit::AddAr41(G4double Ar41E) {
+    fAr41 += 1;
+    eAr41 = Ar41E;
+};
 
 void B4cCalorHit::AddPosition(G4double posx, G4double posy) {
     xPos = posx;

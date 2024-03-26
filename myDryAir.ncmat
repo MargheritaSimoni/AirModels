@@ -11,7 +11,7 @@ NCMAT v7
   293.15
 @DYNINFO
   # Transferred from "Ar" in existing NCrystal.DynamicInfo object
-  element Ar
+  element Ar40
   fraction 0.005025125628140704
   type freegas
 @DYNINFO

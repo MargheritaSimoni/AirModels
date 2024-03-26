@@ -3,6 +3,7 @@ NCMAT v7
 #
 # Nb.:first attempt to air file, concentrations are approximated and sab may be calculated at another temperature, check!!!
 #percentage of each atom is calculated assuming 78% N2, 21%O2 and 1%Ar and a 40% level of hydration, water cross section is assumed as in LiquidWaterH2O_T293.6K.ncmat
+#nb in order to make it run temperature of water was changed from 293.6 to 293.15
 @DENSITY
   0.001225 g_per_cm3
 @STATEOFMATTER
@@ -11,7 +12,7 @@ NCMAT v7
   293.15
 @DYNINFO
   # Transferred from "Ar" in existing NCrystal.DynamicInfo object
-  element Ar
+  element Ar40
   fraction 0.004955811131894923
   type freegas
 @DYNINFO
@@ -18303,7 +18304,7 @@ NCMAT v7
   fraction 0.00919572316860686
   type     scatknl
   egrid    4.02 # Value tuned manually by T. Kittelmann
-  temperature 293.6 #NB: ENDF file specified "effective temperature" as 1194.334K
+  temperature 293.15 #NB: ENDF file specified "effective temperature" as 1194.334K
   alphagrid 1.00145e-05 1.33516e-05 1.78028e-05 2.37368e-05 3.1649e-05 4.2199e-05 5.6266e-05
   7.5021e-05 .000100025 .000133366 .000177828 .000237098 .000316141 .000421521 .000562021
   .000749361 .000999148 .00149872 .00249787 .00349702 .00499574 .00699404 .00999148

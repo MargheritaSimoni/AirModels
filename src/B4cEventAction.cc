@@ -13,6 +13,8 @@
 #include "Randomize.hh"
 #include <iomanip>
 
+#include "G4Track.hh"
+
 //NOTA IMPORTANTE: abso qui è la collezione di hit nel PMT, xtal nel cristallo come puoi vedere a riga 79
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -20,8 +22,8 @@
 B4cEventAction::B4cEventAction()
         : G4UserEventAction(),
           fAbsHCID(-1),
-          fGapHCID(-1)
-          //fRoomHCID(-1)//proveArgon
+          fGapHCID(-1),
+          fRoomHCID(-1)//proveArgon
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -54,22 +56,26 @@ B4cEventAction::GetHitsCollection(G4int hcID,
 void B4cEventAction::PrintEventStatistics(
         G4double nNeutrons, G4double eNeutrons,
         G4double Edep,
-        //G4Double nAr,
+        G4double nAr41, G4double eAr41,
         G4double xPos, G4double yPos, G4ThreeVector gp) const //proveArgon
 {
     // print event statistics
     G4cout
             << "   Neutrons in the detector: "
             << std::setw(7) << nNeutrons
+            << G4endl
             << "       neutron energy: "
             << std::setw(7) << G4BestUnit(eNeutrons, "Energy")
             << G4endl
-            << "        total energy: "
-            << std::setw(7) << G4BestUnit(Edep, "Energy")
-            << G4endl
-            //<< "        Argon 41 "//proveArgon
-            //<< std::setw(7) << nAr
+            //<< "        total energy: "
+            //<< std::setw(7) << G4BestUnit(Edep, "Energy")
             //<< G4endl
+            << "        Number of Argon 41 "//proveArgon
+            << std::setw(7) << nAr41
+            << G4endl
+            << "        Energy of Argon 41 "//proveArgon
+            << std::setw(7) << eAr41
+            << G4endl
             << "        X position: "
             << std::setw(7) << G4BestUnit(xPos, "Length")
             << G4endl
@@ -96,20 +102,20 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
                 = G4SDManager::GetSDMpointer()->GetCollectionID("airLayerHitsCollection");
         fGapHCID
                 = G4SDManager::GetSDMpointer()->GetCollectionID("detectorHitsCollection");
-        //fRoomHCID
-            //    = G4SDManager::GetSDMpointer()->GetCollectionID("roomHitsCollection");//proveArgon
+        fRoomHCID
+                = G4SDManager::GetSDMpointer()->GetCollectionID("roomHitsCollection");//proveArgon
     }
 
     // Get hits collections
     auto gapHC = GetHitsCollection(fAbsHCID, event);
     //auto absoHC = GetHitsCollection(fGapHCID, event);
-   // auto roomHC = GetHitsCollection(fRoomHCID, event);//proveArgon
+    auto roomHC = GetHitsCollection(fRoomHCID, event);//proveArgon
 
 
     // Get hit with total values
     //auto absoHit = (*absoHC)[absoHC->entries()-1];
     auto gapHit = (*gapHC)[gapHC->entries()-1];
-    //auto roomHit = (*roomHC)[roomHC->entries()-1];//proveArgon
+    auto roomHit = (*roomHC)[roomHC->entries()-1];//proveArgon
 
 
 
@@ -124,10 +130,28 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     //G4PrimaryParticle* pp = pv->GetPrimary();
     //G4double generatorEnergy = pp->GetKineticEnergy() + pp->GetMass();
     //G4ThreeVector generatorMomentum =  pp->GetMomentumDirection();
+/*
+    G4int nAr = 0;
+    G4int nPrimaries = event->GetNumberOfPrimaryVertex();//proveArgon
+    for (G4int i = 0; i < nPrimaries; ++i) {
+        G4PrimaryVertex* vertex = event->GetPrimaryVertex(i);
+        G4PrimaryParticle* primary = vertex->GetPrimary();
 
-    //G4Track* secondaryTrack = event->GetSecondary(i); //proveArgon
+        G4Track* track = primary->GetPrimaryTrack();
+        if (!track) continue;
 
+        G4TrackVector* secondaries = track->GetSecondaries();
+        if (!secondaries) continue;
 
+        for (size_t j = 0; j < secondaries->size(); ++j) {
+            G4Track* secondaryTrack = (*secondaries)[j];
+            if (secondaryTrack->GetDefinition()->GetParticleName() == "Ar41") {
+                ++nAr;
+            }
+        }
+    }
+    G4cout << "Number of Ar41 particles produced in this event: " << nAr << G4endl;
+    */
     // Print per event (modulo n)
     //
     auto eventID = event->GetEventID();
@@ -138,7 +162,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
         PrintEventStatistics(
                 gapHit->GetNNeutrons(), gapHit->GetENeutrons(),
                 gapHit->GetEdep(),
-                //roomHit->GetAr41(), //proveArgon
+                roomHit->GetNAr41(), roomHit->GetEAr41(), //proveArgon
                 gapHit->GetXpos(), gapHit->GetYpos(), generatorPosition);
     }
 
@@ -154,8 +178,8 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillH1(0, gapHit->GetNNeutrons());
     analysisManager->FillH1(1, gapHit->GetENeutrons());
     analysisManager->FillH1(2, gapHit->GetEdep());
-    //analysisManager->FillH1(3, roomHit->GetAr41()); //3 is index of istogram //proveArgon
-
+    analysisManager->FillH1(3, roomHit->GetNAr41()); //3 is index of istogram //proveArgon
+    analysisManager->FillH1(4, roomHit->GetEAr41());
 
     analysisManager->FillH2(0, gapHit->GetXpos(), gapHit->GetYpos());
     analysisManager->FillH2(1, generatorPosition[0], generatorPosition[1]);
@@ -166,12 +190,13 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
     analysisManager->FillNtupleDColumn(1, gapHit->GetENeutrons());
     analysisManager->FillNtupleDColumn(2, gapHit->GetEdep());
-    //analysisManager->FillNtupleDColumn(3, roomHit->GetAr41()); //proveArgon nb numeri cambiati
+    analysisManager->FillNtupleDColumn(3, roomHit->GetNAr41()); //proveArgon nb numeri cambiati
+    analysisManager->FillNtupleDColumn(4, roomHit->GetEAr41()); //proveArgon nb numeri cambiati
 
-    analysisManager->FillNtupleDColumn(3, gapHit->GetXpos());
-    analysisManager->FillNtupleDColumn(4, gapHit->GetYpos());
-    analysisManager->FillNtupleDColumn(5, generatorPosition[0]);
-    analysisManager->FillNtupleDColumn(6, generatorPosition[1]);
+    analysisManager->FillNtupleDColumn(5, gapHit->GetXpos());
+    analysisManager->FillNtupleDColumn(6, gapHit->GetYpos());
+    analysisManager->FillNtupleDColumn(7, generatorPosition[0]);
+    analysisManager->FillNtupleDColumn(8, generatorPosition[1]);
 
     analysisManager->AddNtupleRow();
 }  
