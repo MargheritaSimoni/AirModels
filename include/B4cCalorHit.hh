@@ -38,6 +38,16 @@ class B4cCalorHit : public G4VHit
     void Add(G4double de, G4double dl);
     void AddNeutron(G4double neutronE);
     void AddAr41(G4double Ar41E);
+    //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    void AddSecondaryParticle(G4double secondaryE, G4int A, G4int Z);
+    /*
+    void AddN15(G4double N15E);
+    void AddO17(G4double O17E);
+    void AddProton(G4double ProtonE);
+    void AddGamma(G4double GammaE);
+    void AddElectron(G4double ElectronE);
+     */
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     void AddPosition(G4double posx, G4double posy);
 
     // get methods
@@ -47,6 +57,23 @@ class B4cCalorHit : public G4VHit
     G4double GetENeutrons() const;
     G4int GetNAr41() const;
     G4double GetEAr41() const;
+    //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    G4int GetAtomicMass() const;
+    G4int GetAtomicNumber() const;
+    G4double GetSecondaryEnergy() const;
+    /*
+    G4int GetNN15() const;
+    G4double GetEN15() const;
+    G4int GetNO17() const;
+    G4double GetEO17() const;
+    G4int GetNProton() const;
+    G4double GetEProton() const;
+    G4int GetNGamma() const;
+    G4double GetEGamma() const;
+    G4int GetNElectron() const;
+    G4double GetEElectron() const;
+     */
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     G4double GetXpos() const;
     G4double GetYpos() const;
 
@@ -58,6 +85,23 @@ private:
     G4double eNeutron;
     G4double fAr41;
     G4double eAr41;
+    //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    G4double fA;
+    G4double fZ;
+    G4double eSecondary;
+    /*
+    G4double fN15;
+    G4double eN15;
+    G4double fO17;
+    G4double eO17;
+    G4double fProton;
+    G4double eProton;
+    G4double fGamma;
+    G4double eGamma;
+    G4double fElectron;
+    G4double eElectron;
+     */
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     G4double xPos;
     G4double yPos;
 };
@@ -116,6 +160,65 @@ inline G4int B4cCalorHit::GetNAr41() const { //proveArgon
 inline G4double B4cCalorHit::GetEAr41() const { //proveArgon
     return eAr41;
 }
+
+//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+inline G4int B4cCalorHit::GetAtomicNumber() const { //proveArgon
+    return int(fZ);
+}
+
+inline G4int B4cCalorHit::GetAtomicMass() const { //proveArgon
+    return int(fA);
+}
+
+inline G4double B4cCalorHit::GetSecondaryEnergy() const { //proveArgon
+    return double(eSecondary);
+}
+
+/*
+inline G4int B4cCalorHit::GetNN15() const { //proveArgon
+    return int(fN15);
+}
+
+inline G4double B4cCalorHit::GetEN15() const { //proveArgon
+    return eN15;
+}
+
+inline G4int B4cCalorHit::GetNO17() const { //proveArgon
+    return int(fO17);
+}
+
+inline G4double B4cCalorHit::GetEO17() const { //proveArgon
+    return eO17;
+}
+
+inline G4int B4cCalorHit::GetNProton() const { //proveArgon
+    return int(fProton);
+}
+
+inline G4double B4cCalorHit::GetEProton() const { //proveArgon
+    return eProton;
+}
+
+inline G4int B4cCalorHit::GetNGamma() const { //proveArgon
+
+    return int(fGamma);
+}
+
+inline G4double B4cCalorHit::GetEGamma() const { //proveArgon
+
+    return eGamma;
+}
+
+inline G4int B4cCalorHit::GetNElectron() const { //proveArgon
+    return int(fElectron);
+}
+
+inline G4double B4cCalorHit::GetEElectron() const { //proveArgon
+    return eElectron;
+}
+*/
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 inline G4double B4cCalorHit::GetXpos() const {
   return xPos;

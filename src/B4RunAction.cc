@@ -31,19 +31,33 @@ B4RunAction::B4RunAction()
     //
     
     // Creating histograms // name and description of istograms
-    analysisManager->CreateH1("NNeutron","Neutron Number in Detector", 100, -1, 10);// numero di neutroni rivelati per ogni neutrone sparato
-    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector", 100, 0., 10*eV); //nb da anche il max dell'istogramma
-    analysisManager->CreateH1("Egap","Edep in gap", 100, 0., 10*eV);
-    analysisManager->CreateH1("NAr41","Number of Ar-41", 100,-1,100); // H1= 1D istogram //proveArgon
-    analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10*eV); // H1= 1D istogram //proveArgon
-
+    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector", 100, -0.5, 10.5); //nb da anche il max dell'istogramma
+    analysisManager->CreateH1("Egap","Edep in gap", 100, 0.*eV, 10*eV);
+    analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10; // H1= 1D istogram //proveArgon
+//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    analysisManager->CreateH2("AZ","Atomic number and atomic mass", 100, -0.5, 50.5, 100, -0.5, 50.5);
+    analysisManager->SetH2XAxisTitle(0, "A");
+    analysisManager->SetH2YAxisTitle(0, "Z");
+/*
+    analysisManager->CreateH1("NN15","Number of N-15", 100,-1,100);
+    analysisManager->CreateH1("EN15","Energy of N-15", 100, 0., 10*eV);
+    analysisManager->CreateH1("NO17","Number of O-17", 100,-1,100);
+    analysisManager->CreateH1("EO17","Energy of O-17", 100, 0., 10*eV);
+    analysisManager->CreateH1("NProton","Number of Proton", 100,-1,100);
+    analysisManager->CreateH1("EProton","Energy of Proton", 100, 0., 10*MeV);
+    analysisManager->CreateH1("NGamma","Number of Gamma", 100,-1,100);
+    analysisManager->CreateH1("EGamma","Energy of Gamma", 100, -1.5, 100.5*MeV);
+    analysisManager->CreateH1("NElectrons","Number of Electrons", 100,-1,100);
+    analysisManager->CreateH1("EElectrons","Energy of Electrons", 100, 0., 10000*eV);
+    */
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     analysisManager->CreateH2("DetPos","Position in detector", 200, -2.5*m, 2.5*m, 200, -2.5*m, 2.5*m);
-    analysisManager->SetH2XAxisTitle(0, "x [m]");
-    analysisManager->SetH2YAxisTitle(0, "y [m]");
-
-    analysisManager->CreateH2("GenPos","Generator Position", 200, -2.5*m, 2.5*m, 200, -2.5*m, 2.5*m);
     analysisManager->SetH2XAxisTitle(1, "x [m]");
     analysisManager->SetH2YAxisTitle(1, "y [m]");
+
+    analysisManager->CreateH2("GenPos","Generator Position", 200, -2.5*m, 2.5*m, 200, -2.5*m, 2.5*m);
+    analysisManager->SetH2XAxisTitle(2, "x [m]");
+    analysisManager->SetH2YAxisTitle(2, "y [m]");
 
 
     // Creating ntuple
@@ -52,9 +66,26 @@ B4RunAction::B4RunAction()
     analysisManager->CreateNtupleDColumn("Neutron_num");
     analysisManager->CreateNtupleDColumn("Neutron_ene");
     analysisManager->CreateNtupleDColumn("Edep");
-    analysisManager->CreateNtupleDColumn("Ar41"); //proveArgon
+    analysisManager->CreateNtupleDColumn("NAr41"); //proveArgon
     analysisManager->CreateNtupleDColumn("EAr41"); //proveArgon
+//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    analysisManager->CreateNtupleDColumn("Z"); //proveArgon
+    analysisManager->CreateNtupleDColumn("A"); //proveArgon
+    analysisManager->CreateNtupleDColumn("secondaryEnergy"); //proveArgon
 
+/*
+    analysisManager->CreateNtupleDColumn("NN15");
+    analysisManager->CreateNtupleDColumn("EN15");
+    analysisManager->CreateNtupleDColumn("NO17");
+    analysisManager->CreateNtupleDColumn("EO17");
+    analysisManager->CreateNtupleDColumn("NProton");
+    analysisManager->CreateNtupleDColumn("EProton");
+    analysisManager->CreateNtupleDColumn("NGamma");
+    analysisManager->CreateNtupleDColumn("EGamma");
+    analysisManager->CreateNtupleDColumn("NElectrons");
+    analysisManager->CreateNtupleDColumn("EElectrons");
+    */
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     analysisManager->CreateNtupleDColumn("X");
     analysisManager->CreateNtupleDColumn("Y");

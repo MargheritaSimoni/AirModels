@@ -58,7 +58,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::Construct()
 void B4cDetectorConstruction::DefineMaterials()
 {
     G4double airDensity = 0.001225  * g/cm3;
-    G4double temperature=293.25*kelvin; //nb.: this is only relevant for geant, NC has its own temperature, so the two have to be the same
+    G4double temperature=293.6*kelvin; //nb.: this is only relevant for geant, NC has its own temperature (defined in the file or in MatHelper?), so the two have to be the same
 
     //VACUUM
     G4double z, a, density;
@@ -66,9 +66,8 @@ void B4cDetectorConstruction::DefineMaterials()
                    kStateGas, 2.73*kelvin, 3.e-18*pascal);
 
 
-    //AIR FREE GAS MODEL
+    //AIR FREE GAS MODEL with geant4
     auto nistManager = G4NistManager::Instance();
-
  // elements
     //G4Element* elAr = nistManager->FindOrBuildElement("Ar"); // this way they contain multiple isotopes, i prefer to use only the most abundant
     //G4Element* elO = nistManager->FindOrBuildElement("O");
@@ -92,6 +91,7 @@ void B4cDetectorConstruction::DefineMaterials()
     elH->AddIsotope(isoH1, 1.0);
 
     // Dry Air defined by me, using fraction of mass
+    //nb.: Geant4 interprets the argument as weight percentage, it only takes numbers between 0 and 1
     G4double fractionOfMass; //G4 wants material composition by number of elements or mass fraction
     G4Material* fG4air = new G4Material("AirDry_G4", airDensity, 3,kStateGas,temperature); // 3 is the number of components (3 elements)
     fG4air->AddElement(elN, fractionOfMass=0.7542568200665583);
@@ -104,24 +104,19 @@ void B4cDetectorConstruction::DefineMaterials()
     fG4airHy->AddElement(elAr,fractionOfMass= 0.013709832173428962);
     fG4airHy->AddElement(elH,fractionOfMass= 0.000647810375004903);
 
-    //AIR DEFINED USING NCRYSTAL LIBRARIES nb: NC has a standard temperature of 293.15 instead of 273.15 og G4
-    //nb.: NC takes the density from the file-->are you sure? check
+    //AIR DEFINED USING NCRYSTAL LIBRARIES
+    //nb: NC has a standard temperature of 293.15 instead of 273.15 that is set as standard in G4
+    //nb.: NC takes the density and temperature from .ncmat the file
     //nb.: NC does not use mass fraction, it uses mole fraction of the element
     G4Material * fairNC = G4NCrystal::createMaterial("myDryAir.ncmat");
     fairNC->SetName("AirDry_NC");
 
+
     G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_40pc.ncmat");
     fairHydNC->SetName("AirHydr40_NC");
 
-
-    //nb.: Geant4 interprets the argument as weight percentage, it only takes numbers between o and 1
-
-
-
     // GEANT4 AIR
     nistManager->FindOrBuildMaterial("G4_AIR");// non scattera, perché?
-
-
 
     // Print materials
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
@@ -144,15 +139,17 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
 
     //detector
-    G4double detectorXY =  worldSizeXY-1*mm;
-    G4double detectorZ =  1.*mm;
+    G4double detectorXY =  1*m;//worldSizeXY-1*mm;
+    G4double detectorZ =  0.5*mm;
           //air layer in front of the detector used to count neutrons
     G4double airLayerXY =  detectorXY;
     G4double airLayerZ =  detectorZ;
     //worldSizeZ=worldSizeZ+2*detectorZ;
-    G4double detectorPosition= (worldSizeZ-detectorZ*2)/2-1*mm;
 
-    G4double roomPosition = detectorPosition-roomZ/2;
+
+    G4double roomPosition = worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
+    G4double detectorPosition= roomZ/2.- roomPosition +0.5*mm;//last number distance room-detector
+
 
 /*
     G4double dimensioneProvaXY=detectorXY;
@@ -163,7 +160,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-    auto air = G4Material::GetMaterial("AirDry_G4");
+    auto air = G4Material::GetMaterial("AirDry_NC");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {

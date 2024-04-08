@@ -29,9 +29,20 @@ private:
   void PrintEventStatistics(G4double nNeutrons, G4double eNeutrons,
                             G4double Edep,
                             G4double nAr41, G4double eAr41,
+          //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+                            G4double eSec, G4int nA, G4int nZ,
+
+          /*
+                            G4double nN15, G4double eN15,
+                            G4double nO17, G4double eO17,
+                            G4double nProton, G4double eProton,
+                            G4double nGamma, G4double eGamma,
+                            G4double nElectron, G4double eElectron,
+          */
+          //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                             G4double xPos, G4double yPos, G4ThreeVector gp) const; //proveArgon va modificato??
-  
-  // data members                   
+
+  // data members
   G4int  fAbsHCID;
   G4int  fGapHCID;
   G4int  fRoomHCID;//proveArgon

@@ -72,7 +72,7 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
                     "MyCode0004", FatalException, msg);
     }
     
-    // Get hit for total accounting
+     //Get hit for total accounting
     auto hitTotal
     = (*fHitsCollection)[fHitsCollection->entries()-1];
     
@@ -97,8 +97,6 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
         hitTotal->AddNeutron(neutronE);
         hitTotal->AddPosition(pos.x(), pos.y());
         //G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
-        //hitTotal->AddPosition(pos.x, pos.y);
-
         //G4cout<<pid<<" - pre: "<<step->GetPreStepPoint()->GetPhysicalVolume()->GetName()<< " - post: "<<step->GetPostStepPoint()->GetPhysicalVolume()->GetName()<< "- photon Cross: "<< neutronCross<< " Neutron Energy: "<<neutronE<<G4endl;
         // questo termina la traccia in modo da risparmiare tempo nella simulazione
         //Kill(step); //serve??
@@ -113,9 +111,11 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
         // Get the particle ID of each secondary particle
         auto secondaryName = (*secondary)[i]->GetDefinition()->GetParticleName();
         auto secondaryEnergy = (*secondary)[i]->GetKineticEnergy();
+        G4int Z = (*secondary)[i]->GetDefinition()->GetAtomicNumber();
+        G4int A = (*secondary)[i]->GetDefinition()->GetAtomicMass();
+
         // Now you can use secondaryPid or secondaryName as needed
-        G4cout << "Secondary Particle: " << secondaryName << G4endl;
-        G4cout << "Energy of Secondary Particle: " << secondaryEnergy << G4endl;
+
 
         if (secondaryName == "Ar41") { //proveArgon
             hit->AddAr41(secondaryEnergy);
@@ -123,6 +123,43 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
 
             //Kill(step);
         }
+
+        hit->AddSecondaryParticle(secondaryEnergy, A, Z);
+        hitTotal->AddSecondaryParticle(secondaryEnergy, A, Z);
+        //G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << " and atomic number " << Z << G4endl;
+
+        //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+        /*
+        else if (secondaryName == "N15") { //proveArgon
+            hit->AddN15(secondaryEnergy);
+            hitTotal->AddN15(secondaryEnergy);
+            //Kill(step);
+        }
+        else if (secondaryName == "O17") { //proveArgon
+            hit->AddO17(secondaryEnergy);
+            hitTotal->AddO17(secondaryEnergy);
+            //Kill(step);
+        }
+        else if (secondaryName == "proton") { //proveArgon
+            hit->AddProton(secondaryEnergy);
+            hitTotal->AddProton(secondaryEnergy);
+            //Kill(step);
+        }
+        else if (secondaryName == "gamma") { //proveArgon
+            hit->AddGamma(secondaryEnergy);
+            //hitTotal->AddGamma(secondaryEnergy);
+           // G4cout << "Secondary Particle: " << secondaryName << G4endl;
+            //G4cout << "Energy of Secondary Particle: " << secondaryEnergy << G4endl;
+            //Kill(step);
+        }
+        else if (secondaryName == "e-") { //proveArgon
+            hit->AddElectron(secondaryEnergy);
+            hitTotal->AddElectron(secondaryEnergy);
+            //Kill(step);
+        }
+         */
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
         // Example: Print secondary particle information
     }
