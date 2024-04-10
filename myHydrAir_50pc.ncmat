@@ -14,11 +14,11 @@ NCMAT v7
 @DYNINFO
   # Transferred from "Ar" in existing NCrystal.DynamicInfo object
   element Ar40
-  fraction 0.004955811131894923
+  fraction 0.004666288910577834
   type freegas
 @DYNINFO
   element N14
-  fraction 0.773106536575608
+  fraction 0.7754975038409246
   type scatknl
   temperature 293.6
   alphagrid .0001 .000107436 .000115425 .000124008 .00013323 .000143137
@@ -9568,7 +9568,7 @@ NCMAT v7
      5.03375e-39 3.02824e-37 1.30565e-35
 @DYNINFO
   element O16
-  fraction 0.20814406753958675
+  fraction 0.20799734612043744
   type scatknl
   temperature 293.6
   alphagrid 1e-07 1.11231e-07 1.23723e-07 1.37619e-07 1.53075e-07 1.70266e-07
@@ -18235,10 +18235,6 @@ NCMAT v7
 # downloaded from: https://github.com/mctools/ncrystal-extra/tree/master/data
 #
 @DYNINFO
-  element  O
-  fraction 0.00459786158430343
-  type     freegas
-@DYNINFO
   # Scattering kernel for H @ 293.6K extracted from tsl-HinH2O.endf
   #
   # For reference the description embedded in input ENDF file (section MF1,MT451) is repeated here:
@@ -18305,7 +18301,7 @@ NCMAT v7
   #     --->                                 1        451         60          0
   #     --->                                 7          4     228879          0
   element  H1
-  fraction 0.00919572316860686
+  fraction 0.011838861128060114 
   type     scatknl
   egrid    4.02 # Value tuned manually by T. Kittelmann
   temperature 293.6 #NB: ENDF file specified "effective temperature" as 1194.334K

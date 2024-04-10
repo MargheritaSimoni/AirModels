@@ -12,11 +12,11 @@ NCMAT v7
 @DYNINFO
   # Transferred from "Ar" in existing NCrystal.DynamicInfo object
   element Ar40
-  fraction 0.005025125628140704
+  fraction 0.00472219431327238
   type freegas
 @DYNINFO
   element N14
-  fraction 0.7839195979899498
+  fraction 0.784788505978098
   type scatknl
   temperature 293.6
   alphagrid .0001 .000107436 .000115425 .000124008 .00013323 .000143137
@@ -9566,7 +9566,7 @@ NCMAT v7
      5.03375e-39 3.02824e-37 1.30565e-35
 @DYNINFO
   element O16
-  fraction 0.21105527638190955
+  fraction 0.21048929970863053
   type scatknl
   temperature 293.6
   alphagrid 1e-07 1.11231e-07 1.23723e-07 1.37619e-07 1.53075e-07 1.70266e-07

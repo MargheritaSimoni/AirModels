@@ -33,7 +33,7 @@ B4RunAction::B4RunAction()
     // Creating histograms // name and description of istograms
     analysisManager->CreateH1("ENeutron","Neutron Energy in Detector", 100, -0.5, 10.5); //nb da anche il max dell'istogramma
     analysisManager->CreateH1("Egap","Edep in gap", 100, 0.*eV, 10*eV);
-    analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10; // H1= 1D istogram //proveArgon
+    analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10); // H1= 1D istogram //proveArgon
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
     analysisManager->CreateH2("AZ","Atomic number and atomic mass", 100, -0.5, 50.5, 100, -0.5, 50.5);
     analysisManager->SetH2XAxisTitle(0, "A");

@@ -73,7 +73,7 @@ set(EXAMPLEB4C_SCRIPTS
   vis.mac
   sourceMacroMaterials.txt
   myDryAir.ncmat
-  myHydrAir_40pc.ncmat
+  myHydrAir_50pc.ncmat
   )
 
 foreach(_script ${EXAMPLEB4C_SCRIPTS})

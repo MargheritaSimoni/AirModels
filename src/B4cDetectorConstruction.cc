@@ -94,15 +94,15 @@ void B4cDetectorConstruction::DefineMaterials()
     //nb.: Geant4 interprets the argument as weight percentage, it only takes numbers between 0 and 1
     G4double fractionOfMass; //G4 wants material composition by number of elements or mass fraction
     G4Material* fG4air = new G4Material("AirDry_G4", airDensity, 3,kStateGas,temperature); // 3 is the number of components (3 elements)
-    fG4air->AddElement(elN, fractionOfMass=0.7542568200665583);
-    fG4air->AddElement(elO, fractionOfMass=0.2319535102973084);
-    fG4air->AddElement(elAr,fractionOfMass= 0.013789669636133324);
+    fG4air->AddElement(elN, fractionOfMass=0.7555592382447177);
+    fG4air->AddElement(elO, fractionOfMass=0.23147437550371744);
+    fG4air->AddElement(elAr,fractionOfMass= 0.01296638625156488);
 
     G4Material* fG4airHy = new G4Material("AirHydr40_G4", airDensity, 4,kStateGas,temperature); // 3 is the number of components (3 elements)
-    fG4airHy->AddElement(elN, fractionOfMass=0.7498899314948565);
-    fG4airHy->AddElement(elO, fractionOfMass=0.2357524259567096);
-    fG4airHy->AddElement(elAr,fractionOfMass= 0.013709832173428962);
-    fG4airHy->AddElement(elH,fractionOfMass= 0.000647810375004903);
+    fG4airHy->AddElement(elN, fractionOfMass=0.7549326791598274);
+    fG4airHy->AddElement(elO, fractionOfMass=0.23128242182814845);
+    fG4airHy->AddElement(elAr,fractionOfMass= 0.012955633676924953);
+    fG4airHy->AddElement(elH,fractionOfMass= 0.0008292653350992586 );
 
     //AIR DEFINED USING NCRYSTAL LIBRARIES
     //nb: NC has a standard temperature of 293.15 instead of 273.15 that is set as standard in G4
@@ -112,11 +112,11 @@ void B4cDetectorConstruction::DefineMaterials()
     fairNC->SetName("AirDry_NC");
 
 
-    G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_40pc.ncmat");
-    fairHydNC->SetName("AirHydr40_NC");
+    G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_50pc.ncmat");
+    fairHydNC->SetName("AirHydr50_NC");
 
     // GEANT4 AIR
-    nistManager->FindOrBuildMaterial("G4_AIR");// non scattera, perché?
+    //nistManager->FindOrBuildMaterial("G4_AIR");// non scattera, perché?
 
     // Print materials
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
