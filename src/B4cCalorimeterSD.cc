@@ -120,6 +120,7 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
         if (secondaryName == "Ar41") { //proveArgon
             hit->AddAr41(secondaryEnergy);
             hitTotal->AddAr41(secondaryEnergy);
+            G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << G4endl;
 
             //Kill(step);
         }

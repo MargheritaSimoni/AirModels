@@ -223,7 +223,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillH2(2, generatorPosition[0], generatorPosition[1]);
 
 
-
+/*
     // fill ntuple
     analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
     analysisManager->FillNtupleDColumn(1, gapHit->GetENeutrons());
@@ -235,7 +235,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(6, roomHit->GetAtomicMass());
     analysisManager->FillNtupleDColumn(7, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
 
-/*
+
     analysisManager->FillNtupleDColumn(5, roomHit->GetNN15());
     analysisManager->FillNtupleDColumn(6, roomHit->GetEN15());
     analysisManager->FillNtupleDColumn(7, roomHit->GetNO17());
@@ -246,7 +246,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(12, roomHit->GetEGamma());
     analysisManager->FillNtupleDColumn(13, roomHit->GetNElectron());
     analysisManager->FillNtupleDColumn(14, roomHit->GetEElectron());
-    */
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     analysisManager->FillNtupleDColumn(8, gapHit->GetXpos());
@@ -255,4 +255,5 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
 
     analysisManager->AddNtupleRow();
+    */
 }  

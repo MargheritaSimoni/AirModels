@@ -160,7 +160,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-    auto air = G4Material::GetMaterial("AirDry_NC");
+auto air = G4Material::GetMaterial("AirDry_G4");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#Define the energy values
+energy_values=("0.005" "0.05" "0.5")
+
+#Define materials
+NCrystal="auto air = G4Material::GetMaterial(\"AirDry_NC\");"
+Geant4="auto air = G4Material::GetMaterial(\"AirDry_G4\");"
+
+#Define DetectorConstruction path
+DC="../src/B4cDetectorConstruction.cc"
+
+
+sed -i "163s/.*/${NCrystal}/g" "$DC"
+echo "Running with NCrystal materials"
+make > make_output.txt 2>&1
+
+# Loop over each energy value
+for energy in "${energy_values[@]}"; do
+    # Change energy
+    sed -i "4s/.*/\/gun\/energy ${energy} eV/" run1.mac
+    echo "Running with energy ${energy} eV"
+    time ./exampleB4c -m run1.mac | grep Ar41 | wc -l
+done
+
+sed -i "163s/.*/${Geant4}/g" "$DC"
+echo "Running with Geant4 materials"
+make > make_output.txt 2>&1
+
+# Loop over each energy value
+for energy in "${energy_values[@]}"; do
+    # Change energy
+    sed -i "4s/.*/\/gun\/energy ${energy} eV/" run1.mac
+    echo "Running with energy ${energy} eV"
+    time ./exampleB4c -m run1.mac | grep Ar41 | wc -l
+done
