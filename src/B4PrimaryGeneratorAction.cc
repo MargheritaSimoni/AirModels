@@ -47,7 +47,7 @@ B4PrimaryGeneratorAction::~B4PrimaryGeneratorAction()
 void B4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-    G4double halfX = 2.5 * cm;
+    G4double halfX = 2.5 * cm; /// if this is changed the if loop that fills the istogram should be changed as well
     G4double halfY = 2.5 * cm;
     G4double px = G4UniformRand() * (2.* halfX) - halfX;
     G4double py = G4UniformRand() * (2.* halfY) - halfY;

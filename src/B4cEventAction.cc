@@ -56,7 +56,7 @@ B4cEventAction::GetHitsCollection(G4int hcID,
 void B4cEventAction::PrintEventStatistics(
         G4double nNeutrons, G4double eNeutrons,
         G4double Edep,
-        G4double nAr41, G4double eAr41,
+        //G4double nAr41, G4double eAr41,
         //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
         G4double eSec, G4int nA, G4int nZ,
         /*
@@ -80,12 +80,12 @@ void B4cEventAction::PrintEventStatistics(
             //<< "        total energy: "
             //<< std::setw(7) << G4BestUnit(Edep, "Energy")
             //<< G4endl
-            << "        Number of Argon 41 "//proveArgon
-            << std::setw(7) << nAr41
-            << G4endl
-            << "        Energy of Argon 41 "//proveArgon
-            << std::setw(7) << eAr41
-            << G4endl
+            //<< "        Number of Argon 41 "//proveArgon
+            //<< std::setw(7) << nAr41
+            //<< G4endl
+            //<< "        Energy of Argon 41 "//proveArgon
+            //<< std::setw(7) << eAr41
+            //<< G4endl
             << "        X position: "
             << std::setw(7) << G4BestUnit(xPos, "Length")
             << G4endl
@@ -172,7 +172,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
         PrintEventStatistics(
                 gapHit->GetNNeutrons(), gapHit->GetENeutrons(),
                 gapHit->GetEdep(),
-                roomHit->GetNAr41(), roomHit->GetEAr41(), //proveArgon
+                //roomHit->GetNAr41(), roomHit->GetEAr41(), //proveArgon
                 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
                 roomHit->GetSecondaryEnergy(),  roomHit->GetAtomicMass(), roomHit->GetAtomicNumber(),
                 /*
@@ -195,14 +195,15 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     //Qui salva le informazioni nel tree e negli istogrammi, la funzione GetNNeutrons() è definita nel CalorHit.hh e semplicemente legge il numero di fotoni salvato nella variabile fPhotons della collezione di hit.
 
     // fill histograms
-    if(gapHit->GetENeutrons()>=0){
-        analysisManager->FillH1(0, gapHit->GetENeutrons());}
+    if(gapHit->GetENeutrons()>=0 ){
+        if(gapHit->GetXpos()>=-25 && gapHit->GetYpos()>=-25 && gapHit->GetXpos()<=25 && gapHit->GetYpos()<=25){
+            analysisManager->FillH1(0, gapHit->GetENeutrons());}}
     if(gapHit->GetEdep()>=0){
         analysisManager->FillH1(1, gapHit->GetEdep());}
     if(roomHit->GetEAr41()>=0){
         analysisManager->FillH1(2, roomHit->GetEAr41());}
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    if(roomHit->GetAtomicNumber()>=0 && roomHit->GetAtomicMass()){
+    if(roomHit->GetAtomicNumber()>=0 && roomHit->GetAtomicMass()>=0){
         analysisManager->FillH2(0,  roomHit->GetAtomicMass(),  roomHit->GetAtomicNumber());}
     /*
     analysisManager->FillH1(5, roomHit->GetNN15());
@@ -218,24 +219,25 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillH1(14, roomHit->GetEElectron());
     */
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    if(gapHit->GetXpos()>-888 && gapHit->GetYpos()>-888){
+        analysisManager->FillH2(1, gapHit->GetXpos(), gapHit->GetYpos());}
 
-    analysisManager->FillH2(1, gapHit->GetXpos(), gapHit->GetYpos());
-    analysisManager->FillH2(2, generatorPosition[0], generatorPosition[1]);
+    //analysisManager->FillH2(2, generatorPosition[0], generatorPosition[1]);
 
+
+
+    // fill ntuple
+    //analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
+    analysisManager->FillNtupleDColumn(0, gapHit->GetENeutrons());
+    //analysisManager->FillNtupleDColumn(2, gapHit->GetEdep());
+    //analysisManager->FillNtupleDColumn(3, roomHit->GetNAr41()); //proveArgon nb numeri cambiati
+    //analysisManager->FillNtupleDColumn(1, roomHit->GetEAr41()); //proveArgon nb numeri cambiati
+//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
+    analysisManager->FillNtupleDColumn(1, roomHit->GetSecondaryEnergy());
+    analysisManager->FillNtupleDColumn(2, roomHit->GetAtomicMass());
+    analysisManager->FillNtupleDColumn(3, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
 
 /*
-    // fill ntuple
-    analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
-    analysisManager->FillNtupleDColumn(1, gapHit->GetENeutrons());
-    analysisManager->FillNtupleDColumn(2, gapHit->GetEdep());
-    analysisManager->FillNtupleDColumn(3, roomHit->GetNAr41()); //proveArgon nb numeri cambiati
-    analysisManager->FillNtupleDColumn(4, roomHit->GetEAr41()); //proveArgon nb numeri cambiati
-//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->FillNtupleDColumn(5, roomHit->GetSecondaryEnergy());
-    analysisManager->FillNtupleDColumn(6, roomHit->GetAtomicMass());
-    analysisManager->FillNtupleDColumn(7, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
-
-
     analysisManager->FillNtupleDColumn(5, roomHit->GetNN15());
     analysisManager->FillNtupleDColumn(6, roomHit->GetEN15());
     analysisManager->FillNtupleDColumn(7, roomHit->GetNO17());
@@ -246,14 +248,14 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(12, roomHit->GetEGamma());
     analysisManager->FillNtupleDColumn(13, roomHit->GetNElectron());
     analysisManager->FillNtupleDColumn(14, roomHit->GetEElectron());
-
+*/
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    analysisManager->FillNtupleDColumn(8, gapHit->GetXpos());
-    analysisManager->FillNtupleDColumn(9, gapHit->GetYpos());
-    analysisManager->FillNtupleDColumn(10, generatorPosition[0]);
-    analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
+    analysisManager->FillNtupleDColumn(4, gapHit->GetXpos());
+    analysisManager->FillNtupleDColumn(5, gapHit->GetYpos());
+    //analysisManager->FillNtupleDColumn(10, generatorPosition[0]);
+    //analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
 
     analysisManager->AddNtupleRow();
-    */
+
 }  

@@ -72,6 +72,7 @@ set(EXAMPLEB4C_SCRIPTS
   run1.mac
   vis.mac
   sourceMacroMaterials.txt
+  scriptloop.mac
   myDryAir.ncmat
   myHydrAir_50pc.ncmat
   )

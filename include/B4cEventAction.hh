@@ -28,7 +28,7 @@ private:
                                             const G4Event* event) const;
   void PrintEventStatistics(G4double nNeutrons, G4double eNeutrons,
                             G4double Edep,
-                            G4double nAr41, G4double eAr41,
+                           // G4double nAr41, G4double eAr41,
           //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
                             G4double eSec, G4int nA, G4int nZ,
 

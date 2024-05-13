@@ -24,7 +24,7 @@ B4RunAction::B4RunAction()
     //analysisManager->SetHistoDirectoryName("histograms");
     //analysisManager->SetNtupleDirectoryName("ntuple");
     analysisManager->SetVerboseLevel(2);
-    analysisManager->SetNtupleMerging(true);
+    analysisManager->SetNtupleMerging(false);
     // Note: merging ntuples is available only with Root output
     
     // Book histograms, ntuple
@@ -35,7 +35,7 @@ B4RunAction::B4RunAction()
     analysisManager->CreateH1("Egap","Edep in gap", 100, 0.*eV, 10*eV);
     analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10); // H1= 1D istogram //proveArgon
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->CreateH2("AZ","Atomic number and atomic mass", 100, -0.5, 50.5, 100, -0.5, 50.5);
+    analysisManager->CreateH2("AZ","Atomic number and atomic mass", 100, -0.5, 50.5, 100, -0.5, 20.5);
     analysisManager->SetH2XAxisTitle(0, "A");
     analysisManager->SetH2YAxisTitle(0, "Z");
 /*
@@ -51,28 +51,27 @@ B4RunAction::B4RunAction()
     analysisManager->CreateH1("EElectrons","Energy of Electrons", 100, 0., 10000*eV);
     */
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->CreateH2("DetPos","Position in detector", 200, -2.5*m, 2.5*m, 200, -2.5*m, 2.5*m);
-    analysisManager->SetH2XAxisTitle(1, "x [m]");
-    analysisManager->SetH2YAxisTitle(1, "y [m]");
-
-    analysisManager->CreateH2("GenPos","Generator Position", 200, -2.5*m, 2.5*m, 200, -2.5*m, 2.5*m);
-    analysisManager->SetH2XAxisTitle(2, "x [m]");
-    analysisManager->SetH2YAxisTitle(2, "y [m]");
-
+    analysisManager->CreateH2("DetPos","Position in detector", 200, -0.5*m, 0.5*m, 200, -0.5*m, 0.5*m);
+    analysisManager->SetH2XAxisTitle(1, "x [mm]");
+    analysisManager->SetH2YAxisTitle(1, "y [mm]");
+/*
+    analysisManager->CreateH2("GenPos","Generator Position", 200, -2.5*cm, 2.5*cm, 200, -2.5*cm, 2.5*cm);
+    analysisManager->SetH2XAxisTitle(2, "x [mm]");
+    analysisManager->SetH2YAxisTitle(2, "y [mm]");
+*/
 
     // Creating ntuple
     //
     analysisManager->CreateNtuple("B4", "Data Tree");
-    analysisManager->CreateNtupleDColumn("Neutron_num");
+    //analysisManager->CreateNtupleDColumn("Neutron_num");
     analysisManager->CreateNtupleDColumn("Neutron_ene");
-    analysisManager->CreateNtupleDColumn("Edep");
-    analysisManager->CreateNtupleDColumn("NAr41"); //proveArgon
-    analysisManager->CreateNtupleDColumn("EAr41"); //proveArgon
+    //analysisManager->CreateNtupleDColumn("Edep");
+    //analysisManager->CreateNtupleDColumn("NAr41"); //proveArgon
+    //analysisManager->CreateNtupleDColumn("EAr41"); //proveArgon
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
     analysisManager->CreateNtupleDColumn("Z"); //proveArgon
     analysisManager->CreateNtupleDColumn("A"); //proveArgon
     analysisManager->CreateNtupleDColumn("secondaryEnergy"); //proveArgon
-
 /*
     analysisManager->CreateNtupleDColumn("NN15");
     analysisManager->CreateNtupleDColumn("EN15");
@@ -89,8 +88,8 @@ B4RunAction::B4RunAction()
 
     analysisManager->CreateNtupleDColumn("X");
     analysisManager->CreateNtupleDColumn("Y");
-    analysisManager->CreateNtupleDColumn("X0");
-    analysisManager->CreateNtupleDColumn("Y0");
+    //analysisManager->CreateNtupleDColumn("X0");
+    //analysisManager->CreateNtupleDColumn("Y0");
     analysisManager->FinishNtuple();
 }
 

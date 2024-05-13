@@ -130,7 +130,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
     // Geometry parameters
 
     // world
-    G4double worldSizeXY = 3.5*m;
+    G4double worldSizeXY = 3.5*m; // if this is changed the starting point in primary generator of the beam should be changed as well
     G4double worldSizeZ  = 3.5*m;
 
     // room
