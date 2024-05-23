@@ -44,6 +44,7 @@ namespace {
 
 int main(int argc,char** argv)
 {
+  
   NCrystal::libClashDetect();//Detect broken installation
   // Evaluate arguments
   //
@@ -78,11 +79,14 @@ int main(int argc,char** argv)
   if ( ! macro.size() ) {
     ui = new G4UIExecutive(argc, argv, session);
   }
-
+std::cout << "seed" << G4Random::getTheSeed() << std::endl;
   // Choose the Random engine
   //
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
-  
+  long seed=11; // setting seed of random generartor, the line above sets to default, which is 0
+  G4Random::setTheSeed(seed);
+  //std::cout << "seed" << G4Random::getTheSeed() << std::endl;
+
   // Construct the default run manager
   //
 /*

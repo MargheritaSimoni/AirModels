@@ -115,20 +115,27 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
         G4int A = (*secondary)[i]->GetDefinition()->GetAtomicMass();
 
         // Now you can use secondaryPid or secondaryName as needed
+         
+      //  G4cout << "Prove" << secondary->size() << i << G4endl;
+// Retrieve the step number
+//G4int stepID = step->GetTrack()->GetCurrentStepNumber();
+
+// Print step ID
+//G4cout << "Step ID: " << stepID << G4endl;
 
 
         if (secondaryName == "Ar41") { //proveArgon
             hit->AddAr41(secondaryEnergy);
             hitTotal->AddAr41(secondaryEnergy);
-            G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << G4endl;
+            G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A <<  " and atomic number " << Z << "Prove" << secondary->size() << i << G4endl;
 
             //Kill(step);
         }
-
-        hit->AddSecondaryParticle(secondaryEnergy, A, Z);
-        hitTotal->AddSecondaryParticle(secondaryEnergy, A, Z);
-        //G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << " and atomic number " << Z << G4endl;
-
+	if (Z<1){
+            hit->AddSecondaryParticle(secondaryEnergy, A, Z);
+            hitTotal->AddSecondaryParticle(secondaryEnergy, A, Z);
+            // G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << " and atomic number " << Z << "Prove" << secondary->size() << i << stepID << G4endl;
+	}
         //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
         /*
         else if (secondaryName == "N15") { //proveArgon

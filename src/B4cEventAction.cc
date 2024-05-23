@@ -228,14 +228,14 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
 
     // fill ntuple
     //analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
-    analysisManager->FillNtupleDColumn(0, gapHit->GetENeutrons());
+    //analysisManager->FillNtupleDColumn(0, gapHit->GetENeutrons());
     //analysisManager->FillNtupleDColumn(2, gapHit->GetEdep());
     //analysisManager->FillNtupleDColumn(3, roomHit->GetNAr41()); //proveArgon nb numeri cambiati
     //analysisManager->FillNtupleDColumn(1, roomHit->GetEAr41()); //proveArgon nb numeri cambiati
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->FillNtupleDColumn(1, roomHit->GetSecondaryEnergy());
-    analysisManager->FillNtupleDColumn(2, roomHit->GetAtomicMass());
-    analysisManager->FillNtupleDColumn(3, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
+    //analysisManager->FillNtupleDColumn(1, roomHit->GetSecondaryEnergy());
+    analysisManager->FillNtupleDColumn(0, roomHit->GetAtomicMass());
+    analysisManager->FillNtupleDColumn(1, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
 
 /*
     analysisManager->FillNtupleDColumn(5, roomHit->GetNN15());
@@ -251,8 +251,8 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
 */
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    analysisManager->FillNtupleDColumn(4, gapHit->GetXpos());
-    analysisManager->FillNtupleDColumn(5, gapHit->GetYpos());
+    //analysisManager->FillNtupleDColumn(2, gapHit->GetXpos());
+    //analysisManager->FillNtupleDColumn(3, gapHit->GetYpos());
     //analysisManager->FillNtupleDColumn(10, generatorPosition[0]);
     //analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
 

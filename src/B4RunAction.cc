@@ -31,11 +31,11 @@ B4RunAction::B4RunAction()
     //
     
     // Creating histograms // name and description of istograms
-    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector", 100, -0.5, 10.5); //nb da anche il max dell'istogramma
+    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector", 100, 0, 1.e-08*MeV,"eV","none"); //nb min can't be 0 in log scale//nb da anche il max dell'istogramma   
     analysisManager->CreateH1("Egap","Edep in gap", 100, 0.*eV, 10*eV);
     analysisManager->CreateH1("EAr41","Energy of Ar-41", 100, 0., 10); // H1= 1D istogram //proveArgon
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->CreateH2("AZ","Atomic number and atomic mass", 100, -0.5, 50.5, 100, -0.5, 20.5);
+    analysisManager->CreateH2("AZ","Atomic number and atomic mass", 50, -0.5, 50.5, 50, -0.5, 20.5);
     analysisManager->SetH2XAxisTitle(0, "A");
     analysisManager->SetH2YAxisTitle(0, "Z");
 /*
@@ -51,7 +51,7 @@ B4RunAction::B4RunAction()
     analysisManager->CreateH1("EElectrons","Energy of Electrons", 100, 0., 10000*eV);
     */
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->CreateH2("DetPos","Position in detector", 200, -0.5*m, 0.5*m, 200, -0.5*m, 0.5*m);
+    analysisManager->CreateH2("DetPos","Position in detector", 300, -0.03*m, 0.03*m, 300, -0.03*m, 0.03*m);
     analysisManager->SetH2XAxisTitle(1, "x [mm]");
     analysisManager->SetH2YAxisTitle(1, "y [mm]");
 /*
@@ -64,14 +64,15 @@ B4RunAction::B4RunAction()
     //
     analysisManager->CreateNtuple("B4", "Data Tree");
     //analysisManager->CreateNtupleDColumn("Neutron_num");
-    analysisManager->CreateNtupleDColumn("Neutron_ene");
+    //analysisManager->CreateNtupleDColumn("Neutron_ene");
     //analysisManager->CreateNtupleDColumn("Edep");
     //analysisManager->CreateNtupleDColumn("NAr41"); //proveArgon
     //analysisManager->CreateNtupleDColumn("EAr41"); //proveArgon
 //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    analysisManager->CreateNtupleDColumn("Z"); //proveArgon
+    // analysisManager->CreateNtupleDColumn("secondaryEnergy"); //proveArgon
     analysisManager->CreateNtupleDColumn("A"); //proveArgon
-    analysisManager->CreateNtupleDColumn("secondaryEnergy"); //proveArgon
+    analysisManager->CreateNtupleDColumn("Z"); //proveArgon
+
 /*
     analysisManager->CreateNtupleDColumn("NN15");
     analysisManager->CreateNtupleDColumn("EN15");
@@ -86,8 +87,8 @@ B4RunAction::B4RunAction()
     */
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    analysisManager->CreateNtupleDColumn("X");
-    analysisManager->CreateNtupleDColumn("Y");
+    //analysisManager->CreateNtupleDColumn("X");
+    //analysisManager->CreateNtupleDColumn("Y");
     //analysisManager->CreateNtupleDColumn("X0");
     //analysisManager->CreateNtupleDColumn("Y0");
     analysisManager->FinishNtuple();

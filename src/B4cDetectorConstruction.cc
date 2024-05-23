@@ -134,12 +134,12 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
     G4double worldSizeZ  = 3.5*m;
 
     // room
-    G4double roomXY = 3*m;
-    G4double roomZ  = 3*m;
+    G4double roomXY = 5.*cm;
+    G4double roomZ  = 3.*m;
 
 
     //detector
-    G4double detectorXY =  1*m;//worldSizeXY-1*mm;
+    G4double detectorXY =  5.*cm;//worldSizeXY-1*mm;
     G4double detectorZ =  0.5*mm;
           //air layer in front of the detector used to count neutrons
     G4double airLayerXY =  detectorXY;
@@ -148,7 +148,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
 
     G4double roomPosition = worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
-    G4double detectorPosition= roomZ/2.- roomPosition +0.5*mm;//last number distance room-detector
+    G4double detectorPosition= roomZ/2.- roomPosition +5*cm;//last number distance room-detector
 
 
 /*
