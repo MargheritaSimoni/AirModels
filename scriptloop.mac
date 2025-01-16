@@ -1,44 +1,44 @@
 #!/bin/bash
 
 # Define the energy values
-energy_values=("0.005" "0.05" "0.5")
+energy_values=("0.05" "0.5" "1")
 
 # Define materials
-NCrystal="auto air = G4Material::GetMaterial(\"AirDry_NC\");"
-Geant4="auto air = G4Material::GetMaterial(\"AirDry_G4\");"
+NCrystal="auto air = G4Material::GetMaterial(\"AirHydr56_NC\");"
+Geant4="auto air = G4Material::GetMaterial(\"AirHydr56_G4\");"
 
 # Define DetectorConstruction path
 DC="../src/B4cDetectorConstruction.cc"
 
 
-# Get the 9th line of run1.mac
-neutrons=$(sed -n '9p' run1.mac)
+# Get the 9th line of gps.mac
+neutrons=$(sed -n '9p' gps.mac)
 
-# Write the 9th line of run1.mac to Ar41.txt
+# Write the 9th line of gps.mac to Ar41.txt
 echo "Running with: $neutrons neutrons" > Ar41.txt
 
-sed -i "163s/.*/${NCrystal}/g" "$DC"
+sed -i "158s/.*/${NCrystal}/g" "$DC"
 echo "Running with NCrystal materials" | tee -a Ar41.txt
-make > make_output.txt 2>&1
+make > make_output.txt
 
 # Loop over each energy value
 for energy in "${energy_values[@]}"; do
     # Change energy
-    sed -i "4s/.*/\/gun\/energy ${energy} eV/" run1.mac
+    sed -i "5s/.*/\/gps\/ene\/mono ${energy} eV/" gps.mac
     echo "Running with energy ${energy} eV" | tee -a Ar41.txt
-    { time ./exampleB4c -m run1.mac | grep "the Secondary Particle: Ar41 Has atomic mass 41" | wc -l; } 2>&1 | tee -a Ar41.txt
+    { time ./exampleB4c -m gps.mac | grep "the Secondary Particle: Ar41 Has atomic mass 41" | wc -l; } 2>&1 | tee -a Ar41.txt
     mv B4.root "B4_NC${energy}eV.root"
 done
 
-sed -i "163s/.*/${Geant4}/g" "$DC"
+sed -i "158s/.*/${Geant4}/g" "$DC"
 echo "Running with Geant4 materials" | tee -a Ar41.txt
-make >> make_output.txt 2>&1
+make >> make_output.txt
 
 # Loop over each energy value
 for energy in "${energy_values[@]}"; do
     # Change energy
-    sed -i "4s/.*/\/gun\/energy ${energy} eV/" run1.mac
+    sed -i "5s/.*/\/gps\/ene\/mono ${energy} eV/" gps.mac
     echo "Running with energy ${energy} eV" | tee -a Ar41.txt
-    { time ./exampleB4c -m run1.mac | grep "the Secondary Particle: Ar41 Has atomic mass 41" | wc -l; } 2>&1 | tee -a Ar41.txt
+    { time ./exampleB4c -m gps.mac | grep "the Secondary Particle: Ar41 Has atomic mass 41" | wc -l; } 2>&1 | tee -a Ar41.txt
     mv B4.root "B4_G4${energy}eV.root"
 done

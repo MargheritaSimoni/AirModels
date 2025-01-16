@@ -12,7 +12,6 @@
 
 #include "Randomize.hh"
 #include <iomanip>
-
 #include "G4Track.hh"
 
 //NOTA IMPORTANTE: abso qui è la collezione di hit nel PMT, xtal nel cristallo come puoi vedere a riga 79
@@ -21,8 +20,7 @@
 
 B4cEventAction::B4cEventAction()
         : G4UserEventAction(),
-          fAbsHCID(-1),
-          fGapHCID(-1),
+          fdetectorHCID(-1),
           fRoomHCID(-1)//proveArgon
 {}
 
@@ -55,18 +53,9 @@ B4cEventAction::GetHitsCollection(G4int hcID,
 
 void B4cEventAction::PrintEventStatistics(
         G4double nNeutrons, G4double eNeutrons,
-        G4double Edep,
+        //G4double Edep,
         //G4double nAr41, G4double eAr41,
-        //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-        G4double eSec, G4int nA, G4int nZ,
-        /*
-        G4double nN15, G4double eN15,
-        G4double nO17, G4double eO17,
-        G4double nProton, G4double eProton,
-        G4double nGamma, G4double eGamma,
-        G4double nElectron, G4double eElectron,
-         */
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        //G4double eSec, G4int nA, G4int nZ,
         G4double xPos, G4double yPos, G4ThreeVector gp) const //proveArgon
 {
     // print event statistics
@@ -107,24 +96,23 @@ void B4cEventAction::BeginOfEventAction(const G4Event* /*event*/)
 void B4cEventAction::EndOfEventAction(const G4Event* event)
 {
     // Get hits collections IDs (only once)
-    if ( fAbsHCID == -1 ) {
-        fAbsHCID
-                = G4SDManager::GetSDMpointer()->GetCollectionID("airLayerHitsCollection");
-        fGapHCID
+    if ( fdetectorHCID == -1 ) {
+        fdetectorHCID
                 = G4SDManager::GetSDMpointer()->GetCollectionID("detectorHitsCollection");
+    }
+
+    if ( fRoomHCID == -1 ) {
         fRoomHCID
-                = G4SDManager::GetSDMpointer()->GetCollectionID("roomHitsCollection");//proveArgon
+                = G4SDManager::GetSDMpointer()->GetCollectionID("RoomHitsCollection");
     }
 
     // Get hits collections
-    auto gapHC = GetHitsCollection(fAbsHCID, event);
-    //auto absoHC = GetHitsCollection(fGapHCID, event);
+    auto detectorHC = GetHitsCollection(fdetectorHCID, event);
     auto roomHC = GetHitsCollection(fRoomHCID, event);//proveArgon
 
 
     // Get hit with total values
-    //auto absoHit = (*absoHC)[absoHC->entries()-1];
-    auto gapHit = (*gapHC)[gapHC->entries()-1];
+    auto detectorHit = (*detectorHC)[detectorHC->entries()-1];
     auto roomHit = (*roomHC)[roomHC->entries()-1];//proveArgon
 
 
@@ -170,20 +158,11 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
         G4cout << "---> End of event: " << eventID << G4endl;
 
         PrintEventStatistics(
-                gapHit->GetNNeutrons(), gapHit->GetENeutrons(),
-                gapHit->GetEdep(),
+                detectorHit->GetNNeutrons(), detectorHit->GetENeutrons(),
+                //detectorHit->GetEdep(),
                 //roomHit->GetNAr41(), roomHit->GetEAr41(), //proveArgon
-                //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-                roomHit->GetSecondaryEnergy(),  roomHit->GetAtomicMass(), roomHit->GetAtomicNumber(),
-                /*
-                roomHit->GetNN15(), roomHit->GetEN15(), //proveArgon
-                roomHit->GetNO17(), roomHit->GetEO17(), //proveArgon
-                roomHit->GetNProton(), roomHit->GetEProton(), //proveArgon
-                roomHit->GetNGamma(), roomHit->GetEGamma(), //proveArgon
-                roomHit->GetNElectron(), roomHit->GetEElectron(), //proveArgon
-                 */
-                //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                gapHit->GetXpos(), gapHit->GetYpos(), generatorPosition);
+                ///roomHit->GetSecondaryEnergy(),  roomHit->GetAtomicMass(), roomHit->GetAtomicNumber(),
+                detectorHit->GetXpos(), detectorHit->GetYpos(), generatorPosition);
     }
 
     // Fill histograms, ntuple
@@ -195,67 +174,83 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     //Qui salva le informazioni nel tree e negli istogrammi, la funzione GetNNeutrons() è definita nel CalorHit.hh e semplicemente legge il numero di fotoni salvato nella variabile fPhotons della collezione di hit.
 
     // fill histograms
-    if(gapHit->GetENeutrons()>=0 ){
-        if(gapHit->GetXpos()>=-25 && gapHit->GetYpos()>=-25 && gapHit->GetXpos()<=25 && gapHit->GetYpos()<=25){
-            analysisManager->FillH1(0, gapHit->GetENeutrons());}}
-    if(gapHit->GetEdep()>=0){
-        analysisManager->FillH1(1, gapHit->GetEdep());}
+    if(detectorHit->GetENeutrons()>=0 ){
+        //if(detectorHit->GetXpos()>=-25 && detectorHit->GetYpos()>=-25 && detectorHit->GetXpos()<=25 && detectorHit->GetYpos()<=25){
+            analysisManager->FillH1(0, detectorHit->GetENeutrons());
+       // }
+    }
+
     if(roomHit->GetEAr41()>=0){
-        analysisManager->FillH1(2, roomHit->GetEAr41());}
-//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    if(roomHit->GetAtomicNumber()>=0 && roomHit->GetAtomicMass()>=0){
-        analysisManager->FillH2(0,  roomHit->GetAtomicMass(),  roomHit->GetAtomicNumber());}
-    /*
-    analysisManager->FillH1(5, roomHit->GetNN15());
-    analysisManager->FillH1(6, roomHit->GetEN15());
-    analysisManager->FillH1(7, roomHit->GetNO17());
-    analysisManager->FillH1(8, roomHit->GetEO17());
-    analysisManager->FillH1(9, roomHit->GetNProton());
-    analysisManager->FillH1(10, roomHit->GetEProton());
-    analysisManager->FillH1(11, roomHit->GetNGamma());
-    if(roomHit->GetEGamma()>=0){
-    analysisManager->FillH1(12, roomHit->GetEGamma());}
-    analysisManager->FillH1(13, roomHit->GetNElectron());
-    analysisManager->FillH1(14, roomHit->GetEElectron());
-    */
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if(gapHit->GetXpos()>-888 && gapHit->GetYpos()>-888){
-        analysisManager->FillH2(1, gapHit->GetXpos(), gapHit->GetYpos());}
+        analysisManager->FillH1(1, roomHit->GetEAr41());}
+
+    if(roomHit->GetBoundaryEnergy()>=0) {
+        analysisManager->FillH1(2, roomHit->GetBoundaryEnergy());
+        analysisManager->FillH1(3, roomHit->GetBoundaryPosition().z());
+        analysisManager->FillH2(4, roomHit->GetBoundaryPosition().z(),roomHit->GetBoundaryEnergy());
+    }
+
+    std::vector<G4double> particleEnergies = roomHit->GetSecondaryEnergy();
+    std::vector<G4int> atomicMasses = roomHit->GetAtomicMass();
+    std::vector<G4int> atomicNumbers = roomHit->GetAtomicNumber();
+    if (atomicMasses[0]!=-1) {
+        for (size_t i = 0; i < atomicMasses.size(); ++i){
+            if (atomicMasses[i] == -1) {
+                break;
+            }
+            else {
+                G4int A = atomicMasses[i];
+                G4int Z = atomicNumbers[i];
+                analysisManager->FillH2(0, A, Z);
+                std::string fparticleID = "A=" + std::to_string(A) + " Z=" + std::to_string(Z);
+                secondaryParticleCounts[fparticleID]++;
+            }
+            //G4cout << "atomic number and mass" <<A << Z << G4endl;
+        }
+    }
+
+   if(detectorHit->GetXpos()>-888 && detectorHit->GetYpos()>-888){
+        analysisManager->FillH2(1, detectorHit->GetXpos(), detectorHit->GetYpos());}
 
     //analysisManager->FillH2(2, generatorPosition[0], generatorPosition[1]);
 
+    analysisManager->FillH2(2, generatorPosition[0], generatorPosition[1]);
 
+    if(roomHit->GetBoundaryPosition().x()>=3./2*CLHEP::m ) {
+        //analysisManager->FillH1(3, roomHit->GetBoundaryEnergy());
+        analysisManager->FillH2(3, roomHit->GetBoundaryPosition().z(), roomHit->GetBoundaryPosition().y());
+    }
 
     // fill ntuple
+/*
+    if (!particleEnergies.empty()) {
+        for (size_t i = 0; i < atomicMasses.size(); ++i){
+            G4int A= atomicMasses[i];
+            G4int Z= atomicNumbers[i];
+            analysisManager->FillH2(0,  A,  Z);
+            analysisManager->FillNtupleDColumn(0,  A);
+            analysisManager->FillNtupleDColumn(1,  Z); //nb: in questo modo se il vettore ha piu di un elemento ne salva counque solo uno---> to be fixed
+            //G4cout << "atomic number and mass" <<A << Z << G4endl;
+        }
+    }
+    else{
+        analysisManager->FillNtupleDColumn(0,-1);
+        analysisManager->FillNtupleDColumn(1,-1);
+    }
+*/
     //analysisManager->FillNtupleDColumn(0, gapHit->GetNNeutrons());
     //analysisManager->FillNtupleDColumn(0, gapHit->GetENeutrons());
     //analysisManager->FillNtupleDColumn(2, gapHit->GetEdep());
     //analysisManager->FillNtupleDColumn(3, roomHit->GetNAr41()); //proveArgon nb numeri cambiati
     //analysisManager->FillNtupleDColumn(1, roomHit->GetEAr41()); //proveArgon nb numeri cambiati
-//%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-    //analysisManager->FillNtupleDColumn(1, roomHit->GetSecondaryEnergy());
-    analysisManager->FillNtupleDColumn(0, roomHit->GetAtomicMass());
-    analysisManager->FillNtupleDColumn(1, roomHit->GetAtomicNumber() ); //proveArgon nb numeri cambiati
-
-/*
-    analysisManager->FillNtupleDColumn(5, roomHit->GetNN15());
-    analysisManager->FillNtupleDColumn(6, roomHit->GetEN15());
-    analysisManager->FillNtupleDColumn(7, roomHit->GetNO17());
-    analysisManager->FillNtupleDColumn(8, roomHit->GetEO17());
-    analysisManager->FillNtupleDColumn(9, roomHit->GetNProton());
-    analysisManager->FillNtupleDColumn(10, roomHit->GetEProton());
-    analysisManager->FillNtupleDColumn(11, roomHit->GetNGamma());
-    analysisManager->FillNtupleDColumn(12, roomHit->GetEGamma());
-    analysisManager->FillNtupleDColumn(13, roomHit->GetNElectron());
-    analysisManager->FillNtupleDColumn(14, roomHit->GetEElectron());
-*/
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     //analysisManager->FillNtupleDColumn(2, gapHit->GetXpos());
     //analysisManager->FillNtupleDColumn(3, gapHit->GetYpos());
     //analysisManager->FillNtupleDColumn(10, generatorPosition[0]);
     //analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
-
+    analysisManager->FillNtupleDColumn(0, roomHit->GetBoundaryPosition().x());
+    analysisManager->FillNtupleDColumn(1, roomHit->GetBoundaryPosition().y());
+    analysisManager->FillNtupleDColumn(2, roomHit->GetBoundaryPosition().z());
+    analysisManager->FillNtupleDColumn(3, roomHit->GetBoundaryEnergy());
     analysisManager->AddNtupleRow();
 
 }  

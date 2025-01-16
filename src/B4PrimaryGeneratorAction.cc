@@ -52,7 +52,7 @@ B4PrimaryGeneratorAction::B4PrimaryGeneratorAction()
     //ParticleGun implementation
     fParticleGun->SetParticleDefinition(particleDefinition);
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-    fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -16.*mm));
+    fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., pos_z));
     fParticleGun->SetParticleEnergy(0.025*eV);
 #endif
 

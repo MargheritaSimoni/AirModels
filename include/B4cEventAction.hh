@@ -21,30 +21,23 @@ public:
 
   virtual void  BeginOfEventAction(const G4Event* event);
   virtual void    EndOfEventAction(const G4Event* event);
-    
+  const std::map<std::string, int>& GetSecondaryParticleCounts() const { return secondaryParticleCounts; }
+
 private:
   // methods
   B4cCalorHitsCollection* GetHitsCollection(G4int hcID,
                                             const G4Event* event) const;
   void PrintEventStatistics(G4double nNeutrons, G4double eNeutrons,
-                            G4double Edep,
+                            //G4double Edep,
                            // G4double nAr41, G4double eAr41,
-          //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-                            G4double eSec, G4int nA, G4int nZ,
+                           // G4double eSec, G4int nA, G4int nZ,
+                      G4double xPos, G4double yPos, G4ThreeVector gp) const; //proveArgon va modificato??
 
-          /*
-                            G4double nN15, G4double eN15,
-                            G4double nO17, G4double eO17,
-                            G4double nProton, G4double eProton,
-                            G4double nGamma, G4double eGamma,
-                            G4double nElectron, G4double eElectron,
-          */
-          //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                            G4double xPos, G4double yPos, G4ThreeVector gp) const; //proveArgon va modificato??
+    std::map<std::string, int> secondaryParticleCounts;
 
-  // data members
-  G4int  fAbsHCID;
-  G4int  fGapHCID;
+
+    // data members
+  G4int  fdetectorHCID;
   G4int  fRoomHCID;//proveArgon
 };
                      

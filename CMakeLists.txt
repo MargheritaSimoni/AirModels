@@ -91,10 +91,9 @@ set(EXAMPLEB4C_SCRIPTS
   run1.mac
   vis.mac
   gps.mac
-  sourceMacroMaterials.txt
   scriptloop.mac
   myDryAir.ncmat
-  myHydrAir_50pc.ncmat
+  myHydrAir_56_5pc.ncmat
   )
 
 foreach(_script ${EXAMPLEB4C_SCRIPTS})

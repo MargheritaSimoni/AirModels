@@ -67,13 +67,13 @@ void B4cDetectorConstruction::DefineMaterials()
 
 
     //AIR FREE GAS MODEL with geant4
-    auto nistManager = G4NistManager::Instance();
+   // auto nistManager = G4NistManager::Instance();
  // elements
     //G4Element* elAr = nistManager->FindOrBuildElement("Ar"); // this way they contain multiple isotopes, i prefer to use only the most abundant
     //G4Element* elO = nistManager->FindOrBuildElement("O");
     //G4Element* elN = nistManager->FindOrBuildElement("N");
     //G4Element* elH = nistManager->FindOrBuildElement("H");
-    G4String name, symbol;
+    //G4String name, symbol;
     G4Isotope* isoN14 = new G4Isotope("Nitrogen-14", 7, 14, 14.007*g/mole);
     G4Element* elN = new G4Element("Nitrogen", "N", 1);
     elN->AddIsotope(isoN14, 1.0);
@@ -98,22 +98,23 @@ void B4cDetectorConstruction::DefineMaterials()
     fG4air->AddElement(elO, fractionOfMass=0.23147437550371744);
     fG4air->AddElement(elAr,fractionOfMass= 0.01296638625156488);
 
-    G4Material* fG4airHy = new G4Material("AirHydr40_G4", airDensity, 4,kStateGas,temperature); // 3 is the number of components (3 elements)
-    fG4airHy->AddElement(elN, fractionOfMass=0.7549326791598274);
-    fG4airHy->AddElement(elO, fractionOfMass=0.23128242182814845);
-    fG4airHy->AddElement(elAr,fractionOfMass= 0.012955633676924953);
-    fG4airHy->AddElement(elH,fractionOfMass= 0.0008292653350992586 );
+    G4Material* fG4airHy = new G4Material("AirHydr56_G4", airDensity, 4,kStateGas,temperature); // 3 is the number of components (3 elements)
+    fG4airHy->AddElement(elN, fractionOfMass=0.7548707130682057);
+    fG4airHy->AddElement(elO, fractionOfMass=0.2312634377940258);
+    fG4airHy->AddElement(elAr,fractionOfMass=0.012954570257622006);
+    fG4airHy->AddElement(elH,fractionOfMass= 0.0009112788801463952);
 
     //AIR DEFINED USING NCRYSTAL LIBRARIES
     //nb: NC has a standard temperature of 293.15 instead of 273.15 that is set as standard in G4
     //nb.: NC takes the density and temperature from .ncmat the file
     //nb.: NC does not use mass fraction, it uses mole fraction of the element
+
     G4Material * fairNC = G4NCrystal::createMaterial("myDryAir.ncmat");
     fairNC->SetName("AirDry_NC");
 
 
-    G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_50pc.ncmat");
-    fairHydNC->SetName("AirHydr50_NC");
+    G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_56_5pc.ncmat");
+    fairHydNC->SetName("AirHydr56_NC");
 
     // GEANT4 AIR
     //nistManager->FindOrBuildMaterial("G4_AIR");// non scattera, perché?
@@ -134,21 +135,16 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
     G4double worldSizeZ  = 3.5*m;
 
     // room
-    G4double roomXY = 5.*cm;
+    G4double roomXY = 3.*m;
     G4double roomZ  = 3.*m;
 
-
     //detector
-    G4double detectorXY =  5.*cm;//worldSizeXY-1*mm;
-    G4double detectorZ =  0.5*mm;
-          //air layer in front of the detector used to count neutrons
-    G4double airLayerXY =  detectorXY;
-    G4double airLayerZ =  detectorZ;
-    //worldSizeZ=worldSizeZ+2*detectorZ;
+    G4double detectorXY =  10.*cm;//worldSizeXY-1*mm;
+    G4double detectorZ =  0.2*mm;
 
-
-    G4double roomPosition = worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
-    G4double detectorPosition= roomZ/2.- roomPosition +5*cm;//last number distance room-detector
+    //Positions in space
+    G4double roomPosition = 0.*cm;//worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
+    G4double detectorPosition= roomZ/2+ 10*cm;//roomZ/2.- roomPosition +5*cm;//last number distance room-detector
 
 
 /*
@@ -160,7 +156,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-auto air = G4Material::GetMaterial("AirDry_G4");
+auto air = G4Material::GetMaterial("Galactic");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {
@@ -222,7 +218,7 @@ auto air = G4Material::GetMaterial("AirDry_G4");
     //
     // air layer for detector
     //
-
+/*
     auto airLayerS
             = new G4Box("AirLayer",             // its name
                         airLayerXY/2, airLayerXY/2, airLayerZ/2); // its size
@@ -242,7 +238,7 @@ auto air = G4Material::GetMaterial("AirDry_G4");
             0,                // copy number
             fCheckOverlaps);  // checking overlaps
 
-
+*/
     auto RoomS
             = new G4Box("Room",             // its name
                         roomXY/2, roomXY/2, roomZ/2); // its size
@@ -322,14 +318,15 @@ void B4cDetectorConstruction::ConstructSDandField()
     G4SDManager::GetSDMpointer()->AddNewDetector(detectorSD);
     SetSensitiveDetector("detectorLV",detectorSD);
 
+    /*
     //qui invece assegno il sensitive detector
     auto airSD
     = new B4cCalorimeterSD("airSD", "airLayerHitsCollection", fNofLayers);
     G4SDManager::GetSDMpointer()->AddNewDetector(airSD);
     SetSensitiveDetector("airLayerLV",airSD);
-
+*/
     auto roomSD
-            = new B4cCalorimeterSD("roomSD", "roomHitsCollection", fNofLayers);
+            = new B4cCalorimeterSD("roomSD", "RoomHitsCollection", fNofLayers);
     G4SDManager::GetSDMpointer()->AddNewDetector(roomSD);
     SetSensitiveDetector("RoomLV",roomSD);
 

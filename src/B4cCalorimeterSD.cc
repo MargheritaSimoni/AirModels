@@ -5,7 +5,7 @@
 #include "G4SDManager.hh"
 #include "G4ios.hh"
 #include "G4UnitsTable.hh"
-
+#include "G4VProcess.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 B4cCalorimeterSD::B4cCalorimeterSD(
@@ -82,27 +82,116 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
     
     // Qui prende la definizione della particle ID (pid)
     auto pid = step->GetTrack()->GetDefinition()->GetParticleName();
-    
-    // Questa funzione controlla se la traccia passa dal volume xtal al volume pmt
-    G4bool neutronCross = Mcross(step, "AirLayer", "Detector");
-    
-    //se un fotone ottico passa dal cristallo al pmt entra in questo blocco
-    if (pid == "neutron" && neutronCross) { // replaced opticalphoton with NEUTRON
+    auto volumeName = step->GetPreStepPoint()->GetPhysicalVolume()->GetName();
 
-        // prende l'energia cinetica del fotone e chiama la funzione AddPhoton() che è definita nel CalorHit.cc, è semplicemente un contatore che aggiunge +1 al numero di fotoni totali
-        G4double neutronE = step->GetPostStepPoint()->GetKineticEnergy();
-        G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
-        hit->AddNeutron(neutronE);
-        hit->AddPosition(pos.x(), pos.y());
-        hitTotal->AddNeutron(neutronE);
-        hitTotal->AddPosition(pos.x(), pos.y());
-        //G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
-        //G4cout<<pid<<" - pre: "<<step->GetPreStepPoint()->GetPhysicalVolume()->GetName()<< " - post: "<<step->GetPostStepPoint()->GetPhysicalVolume()->GetName()<< "- photon Cross: "<< neutronCross<< " Neutron Energy: "<<neutronE<<G4endl;
-        // questo termina la traccia in modo da risparmiare tempo nella simulazione
-        //Kill(step); //serve??
+    // Questa funzione controlla se la traccia passa dal volume xtal al volume pmt
+    if (volumeName == "Detector"){
+        G4bool isNeutronInDetector = Mcross(step, "Detector", "World");
+        if (pid == "neutron" && isNeutronInDetector) {
+
+            G4double neutronE = step->GetPreStepPoint()->GetKineticEnergy();
+            G4ThreeVector pos = step->GetPreStepPoint()->GetPosition();
+            hit->AddNeutronInDetector(neutronE);
+            hit->AddPositionInDetector(pos.x(), pos.y());
+            hitTotal->AddNeutronInDetector(neutronE);
+            hitTotal->AddPositionInDetector(pos.x(), pos.y());
+            Kill(step);
+        }
     }
 ///////////////////////////////////////
+    if (volumeName == "Room") {
+        ///////////////////////////////////////////7
 
+        //G4cout << "Track ID: " << step->GetTrack()->GetTrackID() << G4endl;
+        //G4cout << "Energy : " << G4BestUnit(step->GetTrack()->GetKineticEnergy(),"Energy")  << G4endl;
+        //G4cout << "GetPreStepPoint Energy=" << G4BestUnit(step->GetPreStepPoint()->GetKineticEnergy(),"Energy") << G4endl;
+        //G4cout << "GetPostStepPoint Energy=" << G4BestUnit(step->GetPostStepPoint()->GetKineticEnergy(),"Energy") << G4endl;
+        //G4cout << "Process: " << step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName() << G4endl;
+       // auto creatorProcess = step->GetTrack()->GetCreatorProcess();
+        //if (creatorProcess) {
+          //  G4cout << "Creator Process: " << creatorProcess->GetProcessName() << G4endl;
+        //}
+
+        ////////////////////////////////////////7
+        //Saving energy and position of neutron that crosses boundary
+        G4bool isNeutronOutOfRoom = Mcross(step, "Room", "World");
+        if (pid == "neutron" && isNeutronOutOfRoom) {
+
+            G4double neutronE = step->GetPostStepPoint()->GetKineticEnergy();
+            G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
+            hit->AddBoundaryTracking(pos, neutronE);
+            hitTotal->AddBoundaryTracking(pos, neutronE);
+            //G4cout << "Neutron out of volume, Energy=" << G4BestUnit(neutronE,"Energy") << G4endl;
+        }
+
+
+        /////////////////////////////////////////////////////////
+        ///////////////////// SECONDARIES ///////////////////////
+        ////////////////////////////////////////////////////////
+
+        // Get the secondary particles produced in the current step
+        //const std::vector<const G4Track*>* secondaries = step->GetSecondaryInCurrentStep();
+        G4int trackID = step->GetTrack()->GetTrackID();
+
+        // Loop over the secondary particles
+        if ( trackID!=1 ){
+            G4double particleEnergy = step->GetTrack()->GetKineticEnergy();
+            G4int atomicNumber = step->GetTrack()->GetDefinition()->GetAtomicNumber();
+            G4int atomicMass = step->GetTrack()->GetDefinition()->GetAtomicMass();
+            G4double secondaryDepositedEnergy = step->GetTotalEnergyDeposit();
+            G4double secondaryTrackLength = step->GetTrack()->GetTrackLength();
+            G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
+            hit->AddSecondaryParticle(trackID, atomicNumber, atomicMass, secondaryDepositedEnergy, secondaryTrackLength);
+            hitTotal->AddSecondaryParticle(trackID, atomicNumber, atomicMass, secondaryDepositedEnergy, secondaryTrackLength);
+
+            if (atomicNumber == 18 && atomicMass == 41){
+                hit->AddAr41(secondaryDepositedEnergy, pos);
+                hitTotal->AddAr41(secondaryDepositedEnergy, pos);
+                //G4cout << "Particle name"<< pid << trackID << " particle energy " << G4BestUnit(secondaryDepositedEnergy,"Energy") <<"x " << G4BestUnit(pos.x(),"Length") << "y "<< G4BestUnit(pos.y(),"Length") << "z " <<G4BestUnit(pos.z(),"Length") << G4endl;
+            }
+
+            /*
+            for (size_t i = 0; i < secondaries->size(); ++i) {
+                const G4Track *secondaryTrack = (*secondaries)[i];
+                // Get the particle definition of the secondary particle
+                G4ParticleDefinition *particle = secondaryTrack->GetDefinition();
+                G4double particleEnergy = secondaryTrack->GetKineticEnergy();
+                G4String particleName = particle->GetParticleName();
+                // Now you can access information about the secondary particle, for example its name
+                G4int Z = (*secondaries)[i]->GetDefinition()->GetAtomicNumber();
+                G4int A = (*secondaries)[i]->GetDefinition()->GetAtomicMass();
+
+                const G4VProcess* creatorProcess = secondaryTrack->GetCreatorProcess();
+
+                if(creatorProcess->GetProcessName() != "hadElastic"){
+                    particleEnergies.push_back(particleEnergy);
+                    AtomicNumbers.push_back(Z);
+                    AtomicMasses.push_back(A);
+                }
+*/
+                //if(creatorProcess->GetProcessName() == "hadElastic"){
+                   // G4cout << "Particle name"<< particleName << " particle energy " << G4BestUnit(particleEnergy,"Energy") <<"x " << G4BestUnit(pos.x(),"Length") << "y "<< G4BestUnit(pos.y(),"Length") << "z " <<G4BestUnit(pos.z(),"Length") << G4endl;
+               // }
+
+
+
+            //hit->AddSecondaryParticle(particleEnergies, AtomicMasses, AtomicNumbers);
+            //hitTotal->AddSecondaryParticle(particleEnergies, AtomicMasses, AtomicNumbers);
+/*
+            for (size_t i = 0; i < particleEnergies.size(); ++i){
+                G4cout << "AAA particleEnergies " << particleEnergies[i] << G4endl;
+                G4cout << "AAA AtomicMasses " << AtomicMasses[i] << G4endl;
+                G4cout << "AAA AtomicNumbers " << AtomicNumbers[i] << G4endl;
+
+            }
+            G4cout << "___________________" << G4endl;
+*/
+        }
+
+    }
+
+
+    /*
     // Get the secondary particles generated in this step
     const std::vector<const G4Track*>* secondary = step->GetSecondaryInCurrentStep();
 
@@ -136,41 +225,8 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
             hitTotal->AddSecondaryParticle(secondaryEnergy, A, Z);
             // G4cout << "the Secondary Particle: " << secondaryName << " Has atomic mass " << A << " and atomic number " << Z << "Prove" << secondary->size() << i << stepID << G4endl;
 	}
-        //%%%%%%%%%%%%%%%%%%%%%% Secondary particles analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
-        /*
-        else if (secondaryName == "N15") { //proveArgon
-            hit->AddN15(secondaryEnergy);
-            hitTotal->AddN15(secondaryEnergy);
-            //Kill(step);
-        }
-        else if (secondaryName == "O17") { //proveArgon
-            hit->AddO17(secondaryEnergy);
-            hitTotal->AddO17(secondaryEnergy);
-            //Kill(step);
-        }
-        else if (secondaryName == "proton") { //proveArgon
-            hit->AddProton(secondaryEnergy);
-            hitTotal->AddProton(secondaryEnergy);
-            //Kill(step);
-        }
-        else if (secondaryName == "gamma") { //proveArgon
-            hit->AddGamma(secondaryEnergy);
-            //hitTotal->AddGamma(secondaryEnergy);
-           // G4cout << "Secondary Particle: " << secondaryName << G4endl;
-            //G4cout << "Energy of Secondary Particle: " << secondaryEnergy << G4endl;
-            //Kill(step);
-        }
-        else if (secondaryName == "e-") { //proveArgon
-            hit->AddElectron(secondaryEnergy);
-            hitTotal->AddElectron(secondaryEnergy);
-            //Kill(step);
-        }
-         */
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-        // Example: Print secondary particle information
     }
+    */
     ///////////////////////
 
 
