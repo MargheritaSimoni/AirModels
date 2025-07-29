@@ -6,6 +6,7 @@
 
 class G4VPhysicalVolume;
 class G4GlobalMagFieldMessenger;
+//class G4UserLimits;
 
 
 class B4cDetectorConstruction : public G4VUserDetectorConstruction
@@ -31,6 +32,8 @@ class B4cDetectorConstruction : public G4VUserDetectorConstruction
 
     G4bool  fCheckOverlaps; // option to activate checking of volumes overlaps
     G4int   fNofLayers;     // number of layers
+    //G4UserLimits* fStepLimit;            // pointer to user step limits
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

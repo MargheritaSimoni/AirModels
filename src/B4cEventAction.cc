@@ -156,6 +156,8 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     auto printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
     if ( ( printModulo > 0 ) && ( eventID % printModulo == 0 ) ) { //checks if the printing frequency is greater than zero and if the current event ID is a multiple of the printing frequency. If both conditions are met, event statistics will be printed.
         G4cout << "---> End of event: " << eventID << G4endl;
+        const long* seeds = CLHEP::HepRandom::getTheSeeds();
+        G4cout << "Event: " << eventID << " Seeds: " << seeds[0] << ", " << seeds[1] << G4endl;
 
         PrintEventStatistics(
                 detectorHit->GetNNeutrons(), detectorHit->GetENeutrons(),
@@ -186,7 +188,8 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     if(roomHit->GetBoundaryEnergy()>=0) {
         analysisManager->FillH1(2, roomHit->GetBoundaryEnergy());
         analysisManager->FillH1(3, roomHit->GetBoundaryPosition().z());
-        analysisManager->FillH2(4, roomHit->GetBoundaryPosition().z(),roomHit->GetBoundaryEnergy());
+        if(abs(roomHit->GetBoundaryPosition().z())!=1.5*CLHEP::m ) {
+            analysisManager->FillH2(4, roomHit->GetBoundaryPosition().z(),roomHit->GetBoundaryEnergy());        }
     }
 
     std::vector<G4double> particleEnergies = roomHit->GetSecondaryEnergy();

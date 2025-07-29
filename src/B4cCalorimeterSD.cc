@@ -101,8 +101,8 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
 ///////////////////////////////////////
     if (volumeName == "Room") {
         ///////////////////////////////////////////7
-
-        //G4cout << "Track ID: " << step->GetTrack()->GetTrackID() << G4endl;
+        //G4ThreeVector pos = step->GetPostStepPoint()->GetPosition();
+        //G4cout << "Track length: " << step->GetTrack()->GetDefinition()->GetParticleName() << G4BestUnit(step->GetTrack()->GetStepLength(), "Length")<< "position" <<G4BestUnit(pos.z(),"Length") << G4endl;
         //G4cout << "Energy : " << G4BestUnit(step->GetTrack()->GetKineticEnergy(),"Energy")  << G4endl;
         //G4cout << "GetPreStepPoint Energy=" << G4BestUnit(step->GetPreStepPoint()->GetKineticEnergy(),"Energy") << G4endl;
         //G4cout << "GetPostStepPoint Energy=" << G4BestUnit(step->GetPostStepPoint()->GetKineticEnergy(),"Energy") << G4endl;

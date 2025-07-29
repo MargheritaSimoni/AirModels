@@ -23,6 +23,7 @@
 
 #include "G4NCrystal/G4NCrystal.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//#include "G4UserLimits.hh" // to set step limits manually
 
 G4ThreadLocal
 G4GlobalMagFieldMessenger* B4cDetectorConstruction::fMagFieldMessenger = 0;
@@ -129,7 +130,7 @@ void B4cDetectorConstruction::DefineMaterials()
 G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 {
     // Geometry parameters
-
+    //G4double maxStep = 1*cm;
     // world
     G4double worldSizeXY = 3.5*m; // if this is changed the starting point in primary generator of the beam should be changed as well
     G4double worldSizeZ  = 3.5*m;
@@ -139,7 +140,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
     G4double roomZ  = 3.*m;
 
     //detector
-    G4double detectorXY =  10.*cm;//worldSizeXY-1*mm;
+    G4double detectorXY =  5.*cm;//worldSizeXY-1*mm;
     G4double detectorZ =  0.2*mm;
 
     //Positions in space
@@ -156,7 +157,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-auto air = G4Material::GetMaterial("Galactic");
+auto air = G4Material::GetMaterial("AirHydr56_NC");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {
@@ -292,6 +293,10 @@ auto air = G4Material::GetMaterial("Galactic");
     visAttributesDetector->SetForceWireframe(true); // Display wireframe
     visAttributesDetector->SetForceSolid(true);
     detectorLV->SetVisAttributes(visAttributesDetector);
+
+
+    //fStepLimit = new G4UserLimits(maxStep);
+    //RoomLV->SetUserLimits(fStepLimit);
 
 
     //

@@ -81,12 +81,13 @@ int main(int argc,char** argv)
   if ( ! macro.size() ) {
     ui = new G4UIExecutive(argc, argv, session);
   }
-std::cout << "seed" << G4Random::getTheSeed() << std::endl;
+//std::cout << "seed" << G4Random::getTheSeed() << std::endl;
   // Choose the Random engine
   //
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
   long seed=0; // setting seed of random generartor, the line above sets to default, which is 0      8,21,26,45,46
-  G4Random::setTheSeed(seed);
+    //long seed[2] = {1213606833, 1370004643};  // Replace with values from seed_log.txt
+    G4Random::setTheSeed(seed);
   //std::cout << "seed" << G4Random::getTheSeed() << std::endl;
 
   // Construct the default run manager
@@ -167,11 +168,12 @@ std::cout << "seed" << G4Random::getTheSeed() << std::endl;
   // owned and deleted by the run manager, so they should not be deleted 
   // in the main() program !
 
+  G4NCrystal::Manager::cleanup();//delete manager singleton, unref cached ncrystal objects (for valgrind).
+
   delete visManager;
   delete runManager;
     //Cleanup:
-  G4NCrystal::Manager::cleanup();//delete manager singleton, unref cached ncrystal objects (for valgrind).
-
+    G4cout << "Application successfully ended.\nBye :-)" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

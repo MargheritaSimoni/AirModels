@@ -31,7 +31,7 @@ B4RunAction::B4RunAction()
     //
     
     // Creating histograms // name and description of istograms
-    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector",500, 0.5e-04*eV, 50*eV,"eV","none","log"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
+    analysisManager->CreateH1("ENeutron","Neutron Energy in Detector",300, 0.005e-04*eV, 0.025*eV,"eV","none","log"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
     analysisManager->SetH1XAxisTitle(0, "Energy [eV]");
     analysisManager->SetH1YAxisTitle(0, "Counts");
 
@@ -39,11 +39,11 @@ B4RunAction::B4RunAction()
     analysisManager->SetH1XAxisTitle(1, "Energy [MeV]");
     analysisManager->SetH1YAxisTitle(1, "Counts");
 
-    analysisManager->CreateH1("EBoundary","Energy on boundary of solid ",500, 0.5e-04*eV, 50*eV, "eV","none","log"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
+    analysisManager->CreateH1("EBoundary","Energy on boundary of solid ",300, 0.005e-04*eV, 0.025*eV, "eV","none","log"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
     analysisManager->SetH1XAxisTitle(2, "Energy [eV]");
     analysisManager->SetH1YAxisTitle(2, "Counts");
 
-    analysisManager->CreateH1("ZBoundary","Z coordinate on boundary of solid ",100, -1.51*m, 1.52*m, "m"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
+    analysisManager->CreateH1("ZBoundary","Z coordinate on boundary of solid ",299, -1.50*m, 1.50*m, "m"); // third entry is type of binning (log binning)//nb min can't be 0 in log scale//nb da anche il max dell'istogramma
     analysisManager->SetH1XAxisTitle(3, "z [m]");
     analysisManager->SetH1YAxisTitle(3, "Counts");
 
@@ -59,11 +59,11 @@ B4RunAction::B4RunAction()
     analysisManager->SetH2XAxisTitle(2, "x [cm]");
     analysisManager->SetH2YAxisTitle(2, "y [cm]");
 
-    analysisManager->CreateH2("SidePos","position on one side of solid", 301, -1.51*m, 1.51*m, 301, -1.51*m, 1.51*m, "m", "m");
-    analysisManager->SetH2XAxisTitle(3, "x [m]");
+    analysisManager->CreateH2("SidePos","position on one side of solid", 99, -1.50*m, 1.50*m, 99, -1.50*m, 1.50*m, "m", "m");
+    analysisManager->SetH2XAxisTitle(3, "z [m]");
     analysisManager->SetH2YAxisTitle(3, "y [m]");
 
-    analysisManager->CreateH2("EBvsZB","Energy vs Z on boundary", 301, 0.1*m, 1.51*m, 200, 0.5e-04*eV, 50*eV, "m", "eV", "none", "none", "linear", "log");
+    analysisManager->CreateH2("EBvsZB","Energy vs Z on boundary", 99, -1.50*m, 1.50*m, 100, 0.005e-04*eV, 0.025*eV, "m", "eV", "none", "none", "linear", "linear");
     analysisManager->SetH2XAxisTitle(4, "Z [m]");
     analysisManager->SetH2YAxisTitle(4, "E [eV]");
 
