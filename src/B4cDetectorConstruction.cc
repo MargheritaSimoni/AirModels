@@ -289,11 +289,18 @@ auto air = G4Material::GetMaterial("AirHydr56_NC");
     worldLV->SetVisAttributes (G4VisAttributes::GetInvisible());
 
     // Set transparency attributes
-    G4VisAttributes* visAttributesDetector = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0, 0.5)); // Red color with 50% transparency
+    G4VisAttributes* visAttributesDetector = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0, 0.5)); // yellow color with 50% transparency
     visAttributesDetector->SetForceWireframe(true); // Display wireframe
     visAttributesDetector->SetForceSolid(true);
     detectorLV->SetVisAttributes(visAttributesDetector);
 
+    // Assign a grey translucent look to the room
+    G4VisAttributes* roomVis = new G4VisAttributes(G4Colour(0.5, 0.5, 0.5, 0.25)); // grey @ 50%
+    roomVis->SetForceSolid(true);
+// Optionally:
+    roomVis->SetForceWireframe(false);
+// Apply to RoomLV
+    RoomLV->SetVisAttributes(roomVis);
 
     //fStepLimit = new G4UserLimits(maxStep);
     //RoomLV->SetUserLimits(fStepLimit);
