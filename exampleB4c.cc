@@ -21,7 +21,7 @@
 //#include "CustomPhysicsConstructor.hh"
 //#include "G4OpticalParameters.hh"
 //#include "G4OpticalPhysics.hh"
-#include "PhysicsList.hh"
+//#include "PhysicsList.hh"
 #include "G4EmStandardPhysics_option4.hh"
 
 #include "Randomize.hh"
@@ -30,6 +30,7 @@
 #include "G4UIExecutive.hh"
 #include "G4StepLimiterPhysics.hh"
 #include "G4NCrystal/G4NCrystal.hh"
+#include "NCrystal/NCrystal.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -168,7 +169,7 @@ int main(int argc,char** argv)
   // owned and deleted by the run manager, so they should not be deleted 
   // in the main() program !
 
-  G4NCrystal::Manager::cleanup();//delete manager singleton, unref cached ncrystal objects (for valgrind).
+  //G4NCrystal::Manager::cleanup();//delete manager singleton, unref cached ncrystal objects (for valgrind).
 
   delete visManager;
   delete runManager;
