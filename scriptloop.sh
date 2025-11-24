@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Define the energy values
+energy_values=("0.010" "0.025" "0.050")
+
+# Define materials
+NCrystal="auto air = G4Material::GetMaterial(\"AirDry_NC\");"
+Geant4="auto air = G4Material::GetMaterial(\"AirDry_G4\");"
+
+# Define DetectorConstruction path
+DC="../src/B4cDetectorConstruction.cc"
+
+
+# Get the 9th line of gps.mac
+neutrons=$(sed -n '9p' gps.mac)
+
+# Write the 9th line of gps.mac to outscriptloop.txt
+echo "Running with: $neutrons neutrons" > outscriptloop.txt
+
+sed -i "160s/.*/${NCrystal}/g" "$DC"
+echo "Running with NCrystal materials" | tee -a outscriptloop.txt
+make > make_output.txt
+
+# Loop over each energy value
+for energy in "${energy_values[@]}"; do
+    # Change energy
+    sed -i "5s/.*/\/gps\/ene\/mono ${energy} eV/" gps.mac
+    echo "Running with energy ${energy} eV" | tee -a outscriptloop.txt
+    { time ./exampleB4c -m gps.mac;} >> outscriptloop.txt 2>&1 #2>&1 | tee -a outscriptloop.txt
+    mv B4.root "B4_NC${energy}eV_1e8_dry.root"
+done
+
+sed -i "160s/.*/${Geant4}/g" "$DC"
+echo "Running with Geant4 materials" | tee -a outscriptloop.txt
+make >> make_output.txt
+
+# Loop over each energy value
+for energy in "${energy_values[@]}"; do
+    # Change energy
+    sed -i "5s/.*/\/gps\/ene\/mono ${energy} eV/" gps.mac
+    echo "Running with energy ${energy} eV" | tee -a outscriptloop.txt
+    { time ./exampleB4c -m gps.mac;} >> outscriptloop.txt 2>&1 #2>&1 | tee -a outscriptloop.txt
+    mv B4.root "B4_G4${energy}eV_1e8_dry.root"
+done
