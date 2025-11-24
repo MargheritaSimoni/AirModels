@@ -86,7 +86,6 @@ void B4cDetectorConstruction::DefineMaterials()
     G4Isotope* isoAr40 = new G4Isotope("Argon-40", 18, 40, 39.948*g/mole);
     G4Element* elAr = new G4Element("Argon", "Ar", 1);
     elAr->AddIsotope(isoAr40, 1.0);
-
     G4Isotope* isoH1 = new G4Isotope("Hydrogen-1", 1, 1, 1.008*g/mole);
     G4Element* elH = new G4Element("Hydrogen", "H", 1);
     elH->AddIsotope(isoH1, 1.0);
@@ -133,7 +132,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
     //G4double maxStep = 1*cm;
     // world
     G4double worldSizeXY = 3.5*m; // if this is changed the starting point in primary generator of the beam should be changed as well
-    G4double worldSizeZ  = 3.5*m;
+    G4double worldSizeZ  = 5.01*m;
 
     // room
     G4double roomXY = 3.*m;
@@ -145,7 +144,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     //Positions in space
     G4double roomPosition = 0.*cm;//worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
-    G4double detectorPosition= roomZ/2+ 10*cm;//roomZ/2.- roomPosition +5*cm;//last number distance room-detector
+    G4double detectorPosition= roomZ/2+ 100*cm;//roomZ/2.- roomPosition +5*cm;//last number distance room-detector
 
 
 /*
@@ -157,8 +156,8 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-auto air = G4Material::GetMaterial("AirHydr56_NC");
-    auto testMaterial = G4Material::GetMaterial("Galactic");
+auto testMaterial = G4Material::GetMaterial("Galactic");
+auto air = G4Material::GetMaterial("AirDry_G4");
 
     if ( !air || !testMaterial) {
         G4ExceptionDescription msg;

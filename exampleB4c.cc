@@ -85,7 +85,7 @@ int main(int argc,char** argv)
   // Choose the Random engine
   //
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
-  long seed=11; // setting seed of random generartor, the line above sets to default, which is 0      8,21,26,45,46
+  long seed=5; // setting seed of random generartor, the line above sets to default, which is 0      8,21,26,45,46
     //long seed[2] = {1213606833, 1370004643};  // Replace with values from seed_log.txt
     G4Random::setTheSeed(seed);
   //std::cout << "seed" << G4Random::getTheSeed() << std::endl;

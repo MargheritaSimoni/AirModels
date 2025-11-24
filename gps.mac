@@ -2,7 +2,7 @@
 #/run/initialize
 
 /gps/particle neutron
-/gps/ene/mono 100 eV
+/gps/ene/mono 0.025 eV
 
 
 /run/printProgress 100
