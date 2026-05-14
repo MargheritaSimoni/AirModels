@@ -76,8 +76,8 @@ ArActivation/
 ### Air Materials - Cross-Section Models
 Air is implemented in **four different configurations**:
 
-| Model | Type | Hydration | Use Case |
-|-------|------|-----------|----------|
+| Model | Type | Hydration | 
+|-------|------|-----------|
 | `AirDry_G4` | Geant4 NIST | Dry
 | `AirHydr56_G4` | Geant4 NIST | 56.5% humidity |
 | `AirDry_NC` | NCrystal molecular model from [1] | Dry
