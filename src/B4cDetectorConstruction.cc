@@ -110,11 +110,11 @@ void B4cDetectorConstruction::DefineMaterials()
     //nb.: NC takes the density and temperature from .ncmat the file
     //nb.: NC does not use mass fraction, it uses mole fraction of the element
 
-    G4Material * fairNC = G4NCrystal::createMaterial("myDryAir.ncmat");
+    G4Material * fairNC = G4NCrystal::createMaterial("data/myDryAir.ncmat");
     fairNC->SetName("AirDry_NC");
 
 
-    G4Material * fairHydNC = G4NCrystal::createMaterial("myHydrAir_56_5pc.ncmat");
+    G4Material * fairHydNC = G4NCrystal::createMaterial("data/myHydrAir_56_5pc.ncmat");
     fairHydNC->SetName("AirHydr56_NC");
 
     // GEANT4 AIR

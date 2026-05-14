@@ -1,35 +1,114 @@
-#Neutron Imaging simulation
-Thermal neutrons are used to simulate Argon activation in air. Thermal neutron cross section of air components in the free gas model can be compared to cross sections in the Young and Koppel model with the help of NCrystal. S(ab) was computed for N2 molecule and O2 molecule using the Young and Koppel model for biatomic molecules, in addition the paramagnetic contribution to O2 cross section was considered.
+# ArActivation - Neutron Activation Simulation
 
-##Geometry
-From left to right (negative to positive Z) the geometry is composed of a neutron source, an air room and a neutron transmission detector. The world is made of galactic material, in order to only observe the contribution of the room, and measure transmission in the correct geometry.
+A Geant4-based simulation framework for studying neutront transport in air and air activation and using thermal neutron cross-sections. This project compares **Geant4** free gas libraries with the model available in [1], implemented with the use of **NCrystal**.
 
-The **room** is a 3mx3mx3m room, filled with air defined by me.
+## Overview
 
-The **Imaging detector** is composed of two box solids, placed one in front of the other, the simulation detects neutrons that pass from one to the other, saving their energy and XY position. The detector is ideal, so it is made of the same material as the world (defined as worldMaterial).
+### What It Does
+- Simulates thermal neutron beams passing through an air-filled chamber
+- Compares free gas model (G4 standard) with molecular model from [1]
+- Saves energy spectra and spatial distributions (XY position) of neutrons
+- Models argon activation in air 
+- Detects and records neutrons that pass through a transmission detector
 
-the **neutron beam** has a squared section of 2x2 cm and impinges on the sample travelling from negative to positive Z values.
+### Key Features
+- **Multiple air models**: Dry air, humid air (56.5%), with both G4 and NCrystal physics
+- **Configurable geometry**: 3m³ air chamber with adjustable sample and detector positions
+- **Two physics backends**: G4 standard physics or NCrystal for implementation of cross section model from [1] 
+- **Visualization support**: Interactive UI with OpenGL rendering
+- **ROOT analysis**: Built-in macros for histogram and ntuple analysis
+- **Flexible configuration**: CMake build system with compile-time options
 
-##Materials
-In this version air is defined in four different ways, depending on the XS model and the level of hydration (AirDry_G4,AirHdr40_G4,AirDry_NC,AirHydr40_NC) The type of air can be chosen by changing the definition of the variable air in the line "auto air = G4Material::GetMaterial("AIR_NC");" to compare free gas model to NCrystal models. 
+## Project Structure
 
-**nb.:** Geant defines material composition with number of atoms or mass fraction, NCrystal wants mole fraction of the atom (not the molecule!) currently all materials are defined assuming dry air composition to be 78%N2 21%O2 and 1%Ar, which are in both case defined considering only the most abundant isotope of each element
+ArActivation/
+├── CMakeLists.txt                                  # CMake build configuration
+├── README.md                                       # Project documentation
+├── exampleB4c.cc                                   # Main application entry point
+│
+├── analysis/                                       # Analysis and post-processing scripts
+│   ├── Extract1D2DIstogram_txt.py                  # Extract 1D/2D histograms to text format
+│   └── ratioIsograms2files.py                      # Compute histogram ratios between two files
+│
+├── data/                                           # Material and configuration databases
+│   ├── myAirHydr_OTHERPHASES.ncmat                 # Humid air material definition (alternative phases)
+│   ├── myDryAir.ncmat                              # Dry air NCrystal material
+│   ├── myDryAir_noMag.ncmat                        # Dry air material without magnetic contribution
+│   └── myHydrAir_56_5pc.ncmat                      # Humid air NCrystal material (56.5% RH)
+│
+├── include/                                        # Header files (.hh)
+│   ├── B4Analysis.hh                               # Analysis manager definitions
+│   ├── B4PrimaryGeneratorAction.hh                 # Primary particle generator declarations
+│   ├── B4RunAction.hh                              # Run action declarations
+│   ├── B4cActionInitialization.hh                  # User action initialization declarations
+│   ├── B4cCalorHit.hh                              # Calorimeter hit class declarations
+│   ├── B4cCalorimeterSD.hh                         # Sensitive detector declarations
+│   ├── B4cDetectorConstruction.hh                  # Detector geometry and materials declarations
+│   └── B4cEventAction.hh                           # Event action declarations
+│
+├── macros/                                         # Geant4 macro scripts
+│   ├── constGPS.mac                                # Constant-energy GPS configuration
+│   ├── expGPS.mac                                  # Exponential GPS spectrum setup
+│   ├── gui.mac                                     # GUI initialization macro
+│   ├── init_vis.mac                                # Visualization startup macro
+│   ├── inputfileGPS.mac                            # GPS configuration from input file
+│   ├── linGPS.mac                                  # Linear energy spectrum GPS setup
+│   ├── monoGPS.mac                                 # Monoenergetic GPS configuration
+│   ├── powGPS.mac                                  # Power-law GPS spectrum setup
+│   ├── run1.mac                                    # Single simulation run macro
+│   ├── scriptloop.mac                              # Batch execution loop script
+│   ├── spectrum_VESUVIO_200points.dat              # Input neutron spectrum data
+│   ├── transmissionpowGPS.mac                      # Transmission-oriented power-law GPS setup
+│   └── vis.mac                                     # Visualization settings
+│
+├── src/                                            # Source files (.cc)
+│   ├── B4PrimaryGeneratorAction.cc                 # Primary particle generator implementation
+│   ├── B4RunAction.cc                              # Run-level actions and analysis handling
+│   ├── B4cActionInitialization.cc                  # User action initialization implementation
+│   ├── B4cCalorHit.cc                              # Calorimeter hit class implementation
+│   ├── B4cCalorimeterSD.cc                         # Sensitive detector implementation
+│   ├── B4cDetectorConstruction.cc                  # Detector geometry and material implementation
+│   └── B4cEventAction.cc                           # Event-level actions
 
 
-##Physics list: Ncrystal
-It is possible to use a physics list manually defined, (in the case of "physicsList.cc", it was taken from a geant4 example), or to use a pre-defined G4 physicslist that correctly treats neutrons in the thermal range, using free gas cross sections (for example QGSP_BIC_HP). Either way,when using NCrystal it is important that the physics list used has 1 active process derived from G4HadronElasticProcess for neutrons, because NCrystal takes over the pHadElastic process, redefining it according to its cross sections.
+## Physics Models
 
-**nb.:** standard parameters for NCrystal materials are defined inside MatHelper.cc and they are: density=1.0gcm3, kStateSolid, temperature=293.15 kelvin, pressure= 1.0 atmosphere. It is important to note that they may not correspond to default geant parameters, (for example default temperature in geant is 273.15K) so it is always good practice to specify these parameters.
+### Air Materials - Cross-Section Models
+Air is implemented in **four different configurations**:
 
-**nb.:** NCrystal is not thread-safe, so in the main all lines to run in multi-thread mode were commented.
-
-**nb.:** Ncrystal takes over pHadElastic up to 5eV, as defined in the class G4NCProcWrapper.cc (even though inside the class G4NVInstall.hh is reported as 2eV). The 5eV threshold may be revisited in future versions as materials like tungsten have a resonance below 5eV.
-
-**nb.:** NCrystal installation needs to be done after initialization of runManager, so the latter can not be done inside the macro file
-
-##Primary generator
-In this version neutrons are generated with a constant distribution, using G4UniformRand(), the beam has a squared section of 5x5 mm.
-
-**nb.:** G4UniformRand does not vary its seed automatically
+| Model | Type | Hydration | Use Case |
+|-------|------|-----------|----------|
+| `AirDry_G4` | Geant4 NIST | Dry
+| `AirHydr56_G4` | Geant4 NIST | 56.5% humidity |
+| `AirDry_NC` | NCrystal molecular model from [1] | Dry
+| `AirHydr56_NC` | NCrystal molecular model from [1] | 56.5% humidity | 
 
 
+**Important Notes:**
+
+- NCrystal assumes mole fraction of atoms (not molecules)
+- Standard NCrystal parameters: density=1.0 g/cm³, T=293.15 K, P=1.0 atm 
+-NCrystal Installation Order: NCrystal must be initialized after runManager creation cannot be done in macro files
+- NCrystal is **not thread-safe** - multi-threaded mode disabled in main: Disable multi-threading with -DMY_MULTITHREADED=OFF if using NCrystal
+- NCrystal energy threshold: 5 eV (defined in `G4NCProcWrapper.cc`) - NCrystal takes over elastic scattering from pHadElastic below 5 eV according to documentation of [2]
+-Material Definition: Always verify mole fractions match your target composition
+-Overlaps Checking: Enabled by default; disable in production for speed
+
+
+## Geometry
+
+1. **Neutron Source**: Produces uniform square beam (5×5 mm at origin)
+2. **Air Room**: 3×3×3 m³ galactic material-filled chamber
+3. **Transmission Detector**: Twin-box detector (4×4 mm XY, 1 mm Z thickness)
+   - Registers transmitted neutrons
+   - Records hit energy and (x,y) position
+
+
+## Bibliography
+
+[1] Simoni, M., Felix Fernandez-Alonso, Tommaso Giovannini, Matthew Krzystyniak, Jose Ignacio Mar-
+quez Damian, Anna Marsicano, Marco Martellucci, Triestino Minniti, Roberto Senesi, Matteo Sorbara
+& Giovanni Romanelli (2026). Molecular contributions to the thermal neutron cross sections of O2, N2,
+and air.. J. Chem. Phys.. DOI: 10.1063/5.0324136
+
+[2] X. Cai and T. Kittelmann, “Ncrystal: A library for thermal neutron transport,” Computer Physics Communications 246, 106851 (2020).

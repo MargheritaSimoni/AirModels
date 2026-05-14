@@ -1,5 +1,0 @@
-#é solo oleic acid!
-ncrystal_hfg2ncmat --formula C18H34O2 --spec 14xCH2+1xOH+1xCH3+2xCHali   --density 0.93 --title OIL -o OIL.ncmat
-
-ncrystal_hfg2ncmat --formula C5H8O2 --spec 2xCHali+2xCH3   --density 1.18  --title PMMA -o PMMA.ncmat
-
