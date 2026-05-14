@@ -145,7 +145,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     //Positions in space
     G4double roomPosition = 0.*cm;//worldSizeZ/2.-roomZ/2.-1*cm; // last number distance from the world wall
-    G4double detectorPosition= roomZ/2+ 10*cm;//roomZ/2.- roomPosition +5*cm;//last number distance room-detector
+    G4double detectorPosition= roomZ/2+ 0.1*mm;//roomZ/2.- roomPosition +5*cm;//last number distance room-detector
 
 
 /*
@@ -157,7 +157,7 @@ G4VPhysicalVolume* B4cDetectorConstruction::DefineVolumes()
 
     // Get materials
 
-auto air = G4Material::GetMaterial("AirHydr56_NC");
+auto air = G4Material::GetMaterial("AirDry_NC");
     auto testMaterial = G4Material::GetMaterial("Galactic");
 
     if ( !air || !testMaterial) {

@@ -125,8 +125,9 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     G4ThreeVector generatorPosition = G4ThreeVector(pv->GetX0(),pv->GetY0(),pv->GetZ0());
 
     //Qui ci sono ulteriori info sulla particella primaria tipo energia ed impulso che in questo momento non stai usando, ma se per esempio vuoi usare un fascio non parallelo puoi decommentare qui
-    //G4PrimaryParticle* pp = pv->GetPrimary();
-    //G4double generatorEnergy = pp->GetKineticEnergy() + pp->GetMass();
+    G4PrimaryParticle* pp = pv->GetPrimary();
+    G4double generatorEnergy = pp->GetKineticEnergy() + pp->GetMass();
+    G4double E0 = generatorEnergy;
     //G4ThreeVector generatorMomentum =  pp->GetMomentumDirection();
 /*
     G4int nAr = 0;
@@ -178,7 +179,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     // fill histograms
     if(detectorHit->GetENeutrons()>=0 ){
         //if(detectorHit->GetXpos()>=-25 && detectorHit->GetYpos()>=-25 && detectorHit->GetXpos()<=25 && detectorHit->GetYpos()<=25){
-            analysisManager->FillH1(0, detectorHit->GetENeutrons());
+            analysisManager->FillH1(0, E0);
        // }
     }
 
@@ -188,7 +189,7 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     if(roomHit->GetBoundaryEnergy()>=0) {
         analysisManager->FillH1(2, roomHit->GetBoundaryEnergy());
         analysisManager->FillH1(3, roomHit->GetBoundaryPosition().z());
-        if(abs(roomHit->GetBoundaryPosition().z())!=1.5*CLHEP::m ) {
+        if(abs(roomHit->GetBoundaryPosition().z())<=1.51*CLHEP::m ) {
             analysisManager->FillH2(4, roomHit->GetBoundaryPosition().z(),roomHit->GetBoundaryEnergy());        }
     }
 
@@ -250,10 +251,10 @@ void B4cEventAction::EndOfEventAction(const G4Event* event)
     //analysisManager->FillNtupleDColumn(3, gapHit->GetYpos());
     //analysisManager->FillNtupleDColumn(10, generatorPosition[0]);
     //analysisManager->FillNtupleDColumn(11, generatorPosition[1]);
-    analysisManager->FillNtupleDColumn(0, roomHit->GetBoundaryPosition().x());
-    analysisManager->FillNtupleDColumn(1, roomHit->GetBoundaryPosition().y());
-    analysisManager->FillNtupleDColumn(2, roomHit->GetBoundaryPosition().z());
-    analysisManager->FillNtupleDColumn(3, roomHit->GetBoundaryEnergy());
-    analysisManager->AddNtupleRow();
+    //analysisManager->FillNtupleDColumn(0, roomHit->GetBoundaryPosition().x());
+    //analysisManager->FillNtupleDColumn(1, roomHit->GetBoundaryPosition().y());
+    //analysisManager->FillNtupleDColumn(2, roomHit->GetBoundaryPosition().z());
+    //analysisManager->FillNtupleDColumn(3, roomHit->GetBoundaryEnergy());
+    //analysisManager->AddNtupleRow();
 
 }  
