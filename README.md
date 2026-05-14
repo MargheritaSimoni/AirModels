@@ -20,7 +20,7 @@ A Geant4-based simulation framework for studying neutront transport in air and a
 - **Flexible configuration**: CMake build system with compile-time options
 
 ## Project Structure
-
+```
 ArActivation/
 ├── CMakeLists.txt                                  # CMake build configuration
 ├── README.md                                       # Project documentation
@@ -69,7 +69,7 @@ ArActivation/
 │   ├── B4cCalorimeterSD.cc                         # Sensitive detector implementation
 │   ├── B4cDetectorConstruction.cc                  # Detector geometry and material implementation
 │   └── B4cEventAction.cc                           # Event-level actions
-
+```
 
 ## Physics Models
 
