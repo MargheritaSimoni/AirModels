@@ -1,4 +1,4 @@
-# ArActivation - Neutron Activation Simulation
+# AirModels - Comparison of neutron cross section models and their impact in transport simulations
 
 A Geant4-based simulation framework for studying neutront transport in air and air activation and using thermal neutron cross-sections. This project compares **Geant4** free gas libraries with the model available in [1], implemented with the use of **NCrystal**.
 
