@@ -97,6 +97,10 @@ endif()
 #
 set(EXAMPLEB4C_SCRIPTS
   macros/monoGPS.mac
+  macros/scriptloop.mac
+  macros/init_vis.mac
+  macros/gui.mac
+  macros/vis.mac
   data/myDryAir.ncmat
   data/myHydrAir_56_5pc.ncmat
   )
