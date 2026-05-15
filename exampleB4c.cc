@@ -76,6 +76,17 @@ int main(int argc,char** argv)
     }
   }  
   
+  //fetch macro in macros folder
+ if (!macro.empty()) {
+  bool hasPath =
+      (macro.find('/') != G4String::npos) ||
+      (macro.find('\\') != G4String::npos);
+
+  if (!hasPath) {
+    macro = "macros/" + macro;
+  }
+}
+  
   // Detect interactive mode (if no macro provided) and define UI session
   //
   G4UIExecutive* ui = 0;
