@@ -145,8 +145,8 @@ G4bool B4cCalorimeterSD::ProcessHits(G4Step* step,
             hitTotal->AddSecondaryParticle(trackID, atomicNumber, atomicMass, secondaryDepositedEnergy, secondaryTrackLength);
 
             if (atomicNumber == 18 && atomicMass == 41){
-                hit->AddAr41(secondaryDepositedEnergy, pos);
-                hitTotal->AddAr41(secondaryDepositedEnergy, pos);
+                hit->AddAr41(trackID, secondaryDepositedEnergy, pos);
+                hitTotal->AddAr41(trackID, secondaryDepositedEnergy, pos);
                 //G4cout << "Particle name"<< pid << trackID << " particle energy " << G4BestUnit(secondaryDepositedEnergy,"Energy") <<"x " << G4BestUnit(pos.x(),"Length") << "y "<< G4BestUnit(pos.y(),"Length") << "z " <<G4BestUnit(pos.z(),"Length") << G4endl;
             }
 

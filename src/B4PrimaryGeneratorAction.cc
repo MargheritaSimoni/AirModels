@@ -19,7 +19,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double pos_z = -1.75 * m;
+G4double pos_z = -6001 * m;
 
 B4PrimaryGeneratorAction::B4PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(),
